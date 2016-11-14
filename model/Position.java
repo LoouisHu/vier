@@ -21,7 +21,6 @@ public class Position {
         return y;
     }
 
-
     public int getZ() {
         return z;
     }
