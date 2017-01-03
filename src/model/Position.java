@@ -5,7 +5,7 @@ package model;
  */
 public class Position {
 
-    int x, y, z;
+    private int x, y, z;
 
     public Position(int x, int y, int z) {
         this.x = x;
