@@ -12,17 +12,17 @@ import java.util.Set;
 public class Board {
     private static final int LENGTH = 4;
     private HashMap<Position, Mark> playedMarks;
-    private HashMap<Position, EmptySpace> availablePositions;
+    private Set<Position> availablePositions;
     private int zAxis;
     private Game game;
 
     public Board(Game game) {
     	this.reset();
         playedMarks = new HashMap<Position, Mark>();
-        availablePositions = new HashMap<Position, EmptySpace>();
+        availablePositions = new HashSet<Position>();
         for (int i = 0; i < LENGTH; i++) {
             for (int j = 0; j < LENGTH; j++) {
-                availablePositions.put(new Position(i, j, 0), new EmptySpace(i, j, 0));
+                availablePositions.add(new Position(i, j, 0));
             }
         }
         this.game = game;
@@ -34,7 +34,7 @@ public class Board {
         return playedMarks;
     }
 
-    public HashMap<Position, EmptySpace> getAvailablePositions() {
+    public Set<Position> getAvailablePositions() {
         return availablePositions;
     }
     
@@ -44,12 +44,22 @@ public class Board {
         int y = mark.getY();
         int z = mark.getZ();
 
-        playedMarks.put(new Position(x, y, z), mark);
 
         if (!playedMarks.containsKey(new Position(x, y, z + 1))) {
-            availablePositions.put(new Position(x, y, z + 1), new EmptySpace(x, y, z + 1));
+        	for (Position p : getPlayedMarks().keySet()) {
+        		if (p.getX() == x && p.getY() == y) {
+        			if (z <= p.getZ()) {
+        				z = p.getZ() + 1;
+        				playedMarks.put(new Position(x, y, z), mark);
+        				break;
+        			} else {
+        				playedMarks.put(new Position(x, y, z), mark);
+        				break;
+        			}
+        		}
+        	}
+            availablePositions.add(new Position(x, y, z + 1));
         }
-        
         zAxis = getHighestZ();
 
         availablePositions.remove(new Position(x, y, z));
@@ -77,7 +87,7 @@ public class Board {
     
     public boolean hasFour(Mark m) {
     	boolean result = false;
-    	char mark = m.getMark();
+    	char mark = m.getMarkChar();
     	int x = m.getX();
     	int y = m.getY();
     	int z = m.getZ();
@@ -85,7 +95,7 @@ public class Board {
     	HashMap<Position, Mark> specificMarks = new HashMap<Position, Mark>();
   
     	for (Mark setMark: allMarks.values()) {
-    		if (setMark.getMark() == mark) {
+    		if (setMark.getMarkChar() == mark) {
     			specificMarks.put(new Position(x, y, z), new Mark(mark));
     		}
     	}
@@ -172,6 +182,17 @@ public class Board {
     	
     	return result;
     }
+    
+    public boolean hasWinner(Game g) {
+    	boolean result = false;
+    	for (int i = 0; i < g.getPlayers().size(); i++) {
+    		//if ()
+    	}
+    	return result;
+    }
 
+    public boolean gameOver() {
+    	return false;
+    }
    
 }

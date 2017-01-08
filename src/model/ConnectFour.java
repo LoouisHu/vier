@@ -1,6 +1,6 @@
 package model;
 
-public class Main {
+public class ConnectFour {
 
     public static void main(String[] args) {
         Game g = new Game();

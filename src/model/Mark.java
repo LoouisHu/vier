@@ -10,14 +10,14 @@ public class Mark {
     public Mark(char mark) {
         this.mark = mark;
     }
-
-    public void setPosition(int x, int y, int z) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
+   
+    public void setPosition(int setX, int setY, int setZ) {
+        this.x = setX;
+        this.y = setY;
+        this.z = setZ;
     }
 
-    public char getMark() {
+    public char getMarkChar() {
         return mark;
     }
 
