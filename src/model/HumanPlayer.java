@@ -33,7 +33,7 @@ public class HumanPlayer extends Player {
 			pAsk = tui.askPosition();
 		}
 		
-		m.setPosition(pAsk.getX(), pAsk.getY(), pAsk.getZ());
+		m.getPosition().setXYZ(pAsk.getX(), pAsk.getY(), pAsk.getZ());
 		
 		return m;
 	}

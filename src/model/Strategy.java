@@ -1,5 +1,9 @@
 package model;
 
 public interface Strategy {
-//todo
+
+	public String getName();
+	
+	public Mark determineMove(Board b, Mark m);
+	
 }

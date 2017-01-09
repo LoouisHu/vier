@@ -2,20 +2,18 @@ package model;
 
 public class ComputerPlayer extends Player {
 
-	public ComputerPlayer(String name, Mark mark) {
-		super(name, mark);
+	private Strategy strategy;
+	private Mark mark;
+	
+	public ComputerPlayer(Strategy s, Mark m) {
+		super(s.getName() + "-" + m.getMarkChar(), m);
+		this.strategy = s;
+		this.mark = m;
 	}
 	
 	@Override
-	public void makeMove(Board board) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public Mark determineMove(Board board) {
-		// TODO Auto-generated method stub
-		return null;
+		return strategy.determineMove(board, mark);
 	}
 
 }

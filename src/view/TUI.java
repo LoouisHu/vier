@@ -5,11 +5,14 @@ import java.util.Scanner;
 
 import model.Game;
 import model.Position;
+import model.Strategy;
+import model.TrumpStrategy;
+
+//TODO Throw exceptions, maybe? Wrong inputs can go wrong.
 
 public class TUI {
 	
 	Scanner sc;
-	Game g;
 	
 	public TUI() {
 		sc = new Scanner(System.in);
@@ -28,9 +31,9 @@ public class TUI {
 		return players;
 	}
 	
-	public int askHowManyComputerPlayers() {
+	public int askHowManyComputerPlayers(Game g) {
 		int players = -1;
-		while (players < 0 || players > 4) {
+		while (players < 0 || players > 4 && players <= g.getManyPlayers()) {
 			System.out.println("How many computers do you want? (Between 0 and " 
 					+ g.getManyPlayers() + ")");
 			players = sc.nextInt();
@@ -54,7 +57,7 @@ public class TUI {
 		return p;
 	}
 	
-	public ArrayList<String> askNames(Game gm) {
+	public ArrayList<String> askNames(Game g) {
 		ArrayList<String> names = new ArrayList<String>();
 		System.out.println("Set player names:");
 		
@@ -64,5 +67,25 @@ public class TUI {
 			names.add(s);
 		}
 		return names;
+	}
+	
+	public ArrayList<Strategy> askStrategies(Game g) {
+		ArrayList<Strategy> result = new ArrayList<Strategy>();
+		
+		for (int i = 0; i < g.getManyComputerPlayers(); i++) {
+			System.out.println("What strategy do you give Computer Player " + (i + 1) + "?\n"
+				+ "Available strategies: <TrumpStrategy>");
+			String s = sc.nextLine();
+			if (s.equals("Trump") || s.equals("TrumpStrategy")) {
+				result.add(new TrumpStrategy());
+			} else {
+				System.out.println("WRONG! We'll make this game GREAT AGAIN!");
+				result.add(new TrumpStrategy());
+			}
+
+		}
+		
+		
+		return result;
 	}
 }

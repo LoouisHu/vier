@@ -16,19 +16,60 @@ public class Game extends Thread {
     private int manyPlayers;
     private int manyComputerPlayers;
     private TUI tui;
+    private int usedChars;
 
     public Game() {
     	board = new Board(this);
     	manyPlayers = tui.askHowManyPlayers();
-    	manyComputerPlayers = tui.askHowManyComputerPlayers();
+    	manyComputerPlayers = tui.askHowManyComputerPlayers(this);
     	manyPlayers = -manyComputerPlayers;
     	players = new ArrayList<Player>();
     	ArrayList<String> playerNames = tui.askNames(this);
     	for (int j = 0; j < playerNames.size(); j++) {
     		player = new HumanPlayer(playerNames.get(j), new Mark(alphabet[j]));
     		players.add(player);
+    		usedChars++;
+    	}
+    	
+    	ArrayList<Strategy> strategies = tui.askStrategies(this);
+    	for (int i = 0; i < strategies.size(); i++) {
+    		player = new ComputerPlayer(strategies.get(i), new Mark(alphabet[usedChars + i]));
     	}
     	current = 0;
+    }
+    
+    public void start() {
+    	//TODO
+    	boolean gogo = true;
+    	while (gogo) {
+    		reset();
+    		play();
+    	}
+ 
+    }
+    
+    private void play() {
+    	update();
+    	while (!board.gameOver()) {
+    		players.get(current).makeMove(board);
+    		update();
+    		current = (current + 1) % players.size();
+    	}
+    	printResult();
+    }
+    
+    private void update() {
+    	System.out.println("\nCurrent game situation: \n\n" + board.toString());
+    }
+    
+    private void reset() {
+    	current = 0;
+    	usedChars = 0;
+    	board.reset();
+    }
+    
+    private void printResult() {
+    	//TODO
     }
     
     public ArrayList<Player> getPlayers() {
@@ -39,12 +80,17 @@ public class Game extends Thread {
     	return manyPlayers;
     }
     
-    public char[] getAlphabet() {
-    	return alphabet;
+    public int getManyComputerPlayers() {
+    	return manyComputerPlayers;
     }
     
-    private void reset() {
-    	current = 0;
-    	board.reset();
+//    public char[] getAlphabet() {
+//    	return alphabet;
+//    }
+//    
+    public Board getBoard() {
+    	return board;
     }
+    
+
 }

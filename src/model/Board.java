@@ -12,9 +12,8 @@ import java.util.Set;
 public class Board {
     private static final int LENGTH = 4;
     private HashMap<Position, Mark> playedMarks;
-    private Set<Position> availablePositions;
+    private HashSet<Position> availablePositions;
     private int zAxis;
-    private Game game;
 
     public Board(Game game) {
     	this.reset();
@@ -25,7 +24,6 @@ public class Board {
                 availablePositions.add(new Position(i, j, 0));
             }
         }
-        this.game = game;
         this.zAxis = 1;
     }
 
@@ -34,15 +32,15 @@ public class Board {
         return playedMarks;
     }
 
-    public Set<Position> getAvailablePositions() {
+    public HashSet<Position> getAvailablePositions() {
         return availablePositions;
     }
     
    
     public void setMark(Mark mark) {
-        int x = mark.getX();
-        int y = mark.getY();
-        int z = mark.getZ();
+        int x = mark.getPosition().getX();
+        int y = mark.getPosition().getY();
+        int z = mark.getPosition().getZ();
 
 
         if (!playedMarks.containsKey(new Position(x, y, z + 1))) {
@@ -67,8 +65,8 @@ public class Board {
     
     public Board deepCopy(Game g) {
     	Board b = new Board(g);
-    	b.availablePositions = this.getAvailablePositions();
-    	b.playedMarks = this.getPlayedMarks();
+    	b.availablePositions = g.getBoard().getAvailablePositions();
+    	b.playedMarks = g.getBoard().getPlayedMarks();
     	return b;
     }
     
@@ -85,12 +83,12 @@ public class Board {
     	return Collections.max(zposes);
     }
     
-    public boolean hasFour(Mark m) {
+    public boolean hasAdjacentFour(Mark m) {
     	boolean result = false;
     	char mark = m.getMarkChar();
-    	int x = m.getX();
-    	int y = m.getY();
-    	int z = m.getZ();
+    	int x = m.getPosition().getX();
+    	int y = m.getPosition().getY();
+    	int z = m.getPosition().getZ();
     	HashMap<Position, Mark> allMarks = this.getPlayedMarks();
     	HashMap<Position, Mark> specificMarks = new HashMap<Position, Mark>();
   
@@ -154,7 +152,12 @@ public class Board {
     			}
     		}
     	}
-    	//TODO diagonal check
+    	return result;
+    }
+    
+    public boolean hasDiagonalFour(Mark m) {
+    	boolean result = false;
+    	
     	return result;
     }
     
@@ -183,16 +186,29 @@ public class Board {
     	return result;
     }
     
-    public boolean hasWinner(Game g) {
+    public boolean isWinner(Game g) {
     	boolean result = false;
-    	for (int i = 0; i < g.getPlayers().size(); i++) {
-    		//if ()
+    	for (Player p : g.getPlayers()) {
+    		if (hasDiagonalFour(p.getMark())) {
+    			result = true;
+    		}
     	}
     	return result;
     }
 
     public boolean gameOver() {
-    	return false;
+    	return false; //TODO
+    }
+    
+    public String toString() {
+    	StringBuilder result = new StringBuilder();
+    	for (int i = 0; i < zAxis; i++) {	
+    		for (int j = 0; j < (LENGTH * LENGTH); j++) {
+    			//TODO
+    		}
+    		result.append("\n");
+    	}
+    	return result.toString();
     }
    
 }
