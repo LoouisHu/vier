@@ -16,7 +16,6 @@ public class Board {
     private int zAxis;
 
     public Board(Game game) {
-    	this.reset();
         playedMarks = new HashMap<Position, Mark>();
         availablePositions = new HashSet<Position>();
         for (int i = 0; i < LENGTH; i++) {
@@ -202,13 +201,32 @@ public class Board {
     
     public String toString() {
     	StringBuilder result = new StringBuilder();
-    	for (int i = 0; i < zAxis; i++) {	
-    		for (int j = 0; j < (LENGTH * LENGTH); j++) {
-    			//TODO
+    	for (int i = 0; i < zAxis; i++) {
+    		result.append("y\\x|1|2|3|4|\n");
+    		for (int j = 0; j < LENGTH; j++) {
+    			result.append("  " + (j + 1) + "|");
+    			for (int k = 0; k < LENGTH; k++) {
+    				if (playedMarks.keySet().contains(new Position(j, k, i))) {
+    					result.append(playedMarks.get(new Position(j, k, i)) + "|");
+    				} else {
+    					result.append(" |");
+    				}
+    				if (k == LENGTH - 1) {
+    					result.append("\n");
+    				}
+    			}
+
     		}
+    		result.append(" z=" + (i + 1));
     		result.append("\n");
     	}
     	return result.toString();
     }
    
+//    public static void main(String[] args) {
+//    	Game g = new Game();
+//    	Board b = new Board(g);
+//    	System.out.println(b.toString());
+//    }
+    
 }

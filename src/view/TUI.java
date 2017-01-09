@@ -63,7 +63,7 @@ public class TUI {
 		
 		for (int i = 0; i < g.getManyPlayers(); i++) {
 			System.out.println("What's the name of Player " + (i + 1) + "?");
-			String s = sc.nextLine();
+			String s = sc.next();
 			names.add(s);
 		}
 		return names;

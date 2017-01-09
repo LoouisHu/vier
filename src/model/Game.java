@@ -20,9 +20,10 @@ public class Game extends Thread {
 
     public Game() {
     	board = new Board(this);
+    	tui = new TUI();
     	manyPlayers = tui.askHowManyPlayers();
     	manyComputerPlayers = tui.askHowManyComputerPlayers(this);
-    	manyPlayers = -manyComputerPlayers;
+    	manyPlayers = manyPlayers - manyComputerPlayers;
     	players = new ArrayList<Player>();
     	ArrayList<String> playerNames = tui.askNames(this);
     	for (int j = 0; j < playerNames.size(); j++) {
@@ -31,9 +32,11 @@ public class Game extends Thread {
     		usedChars++;
     	}
     	
-    	ArrayList<Strategy> strategies = tui.askStrategies(this);
-    	for (int i = 0; i < strategies.size(); i++) {
-    		player = new ComputerPlayer(strategies.get(i), new Mark(alphabet[usedChars + i]));
+    	if (manyComputerPlayers > 0) {
+    		ArrayList<Strategy> strategies = tui.askStrategies(this);
+    		for (int i = 0; i < strategies.size(); i++) {
+    			player = new ComputerPlayer(strategies.get(i), new Mark(alphabet[usedChars + i]));
+    		}
     	}
     	current = 0;
     }
