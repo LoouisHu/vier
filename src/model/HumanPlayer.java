@@ -2,6 +2,7 @@ package model;
 
 import java.util.Set;
 
+import exceptions.IllegalIntegerException;
 import view.TUI;
 
 /**
@@ -13,27 +14,34 @@ public class HumanPlayer extends Player {
 	
 	public HumanPlayer(String playerName, Mark playerMark) {
 		super(playerName, playerMark);
+		tui = new TUI();
 	}
 
 	public Mark determineMove(Board board) {
-		boolean valid = false;
-		Mark m = new Mark(getMark().getMarkChar());
-		Position pAsk = tui.askPosition();
+		boolean valid = false;	
 		Set<Position> availablePositions = board.getAvailablePositions();
-		for (Position pos : availablePositions) {
-			if (pAsk.getX() == pos.getX() && pAsk.getY() == pos.getY()) {
-				valid = true;
-				break;
-			}
-		}
+		Position pAsk = new Position(-1, -1, 0);
 		
-		while (!valid) {
+		outer: while (!valid) {
+			try {
+				pAsk = tui.askPosition();
+			} catch (IllegalIntegerException e) {
+				e.printStackTrace();
+			}
+			for (Position pos : availablePositions) {
+				if (pAsk.getX() == pos.getX() && pAsk.getY() == pos.getY()) {
+					valid = true;
+					break outer;
+				}
+			}
 			System.out.println("ERROR: position (" + pAsk.getX() + ", " + pAsk.getY() +
 					") is no valid choice.");
-			pAsk = tui.askPosition();
+			
 		}
+
+		Mark m = new Mark(getMark().getMarkChar(), pAsk);
 		
-		m.getPosition().setXYZ(pAsk.getX(), pAsk.getY(), pAsk.getZ());
+	//	m.getPosition().setXYZ(pAsk.getX(), pAsk.getY(), 0);
 		
 		return m;
 	}

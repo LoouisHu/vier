@@ -12,7 +12,7 @@ import java.util.Set;
 public class Board {
     private static final int LENGTH = 4;
     private HashMap<Position, Mark> playedMarks;
-    private HashSet<Position> availablePositions;
+    private Set<Position> availablePositions;
     private int zAxis;
 
     public Board(Game game) {
@@ -25,41 +25,34 @@ public class Board {
         }
         zAxis = 1;
     }
-
   
     public HashMap<Position, Mark> getPlayedMarks() {
         return playedMarks;
     }
 
-    public HashSet<Position> getAvailablePositions() {
+    public Set<Position> getAvailablePositions() {
         return availablePositions;
     }
     
-   
     public void setMark(Mark mark) {
         int x = mark.getPosition().getX();
         int y = mark.getPosition().getY();
         int z = mark.getPosition().getZ();
-
-
         if (!playedMarks.containsKey(new Position(x, y, z + 1))) {
-        	for (Position p : getPlayedMarks().keySet()) {
+        	for (Position p : playedMarks.keySet()) {
         		if (p.getX() == x && p.getY() == y) {
         			if (z <= p.getZ()) {
         				z = p.getZ() + 1;
         				playedMarks.put(new Position(x, y, z), mark);
         				break;
-        			} else {
-        				playedMarks.put(new Position(x, y, z), mark);
-        				break;
         			}
         		}
         	}
+        	playedMarks.put(new Position(x, y, z), mark);
             availablePositions.add(new Position(x, y, z + 1));
         }
-        zAxis = getHighestZ();
-
         availablePositions.remove(new Position(x, y, z));
+        zAxis = getHighestZ();
     }
     
     public Board deepCopy(Game g) {
@@ -72,10 +65,19 @@ public class Board {
     public void reset() {
     	playedMarks.clear();
     	availablePositions.clear();
+        for (int i = 0; i < LENGTH; i++) {
+            for (int j = 0; j < LENGTH; j++) {
+                availablePositions.add(new Position(i, j, 0));
+            }
+        }
+    	
     }
     
     public int getHighestZ() {
     	HashSet<Integer> zposes = new HashSet<Integer>();
+    	if (playedMarks.keySet().size() == 0) {
+    		return 1;
+    	}
     	for (Position p : playedMarks.keySet()) {
     		zposes.add(p.getZ());
     	}
@@ -310,8 +312,10 @@ public class Board {
     public boolean isWinner(Game g) {
     	boolean result = false;
     	for (Player p : g.getPlayers()) {
-    		if (hasDiagonalFour(p.getMark()) || hasAdjacentFour(p.getMark())) {
-    			result = true;
+    		if (p.getMark().getPosition() != null) {
+    			if (hasDiagonalFour(p.getMark()) || hasAdjacentFour(p.getMark())) {
+    				result = true;
+    			}
     		}
     	}
     	return result;
@@ -329,7 +333,7 @@ public class Board {
     			result.append("  " + (j + 1) + "|");
     			for (int k = 0; k < LENGTH; k++) {
     				if (playedMarks.keySet().contains(new Position(j, k, i))) {
-    					result.append(playedMarks.get(new Position(j, k, i)) + "|");
+    					result.append(playedMarks.get(new Position(j, k, i)).getMarkChar() + "|");
     				} else {
     					result.append(" |");
     				}
@@ -346,9 +350,6 @@ public class Board {
     }
    
     public static void main(String[] args) {
-    	Game g = new Game();
-    	Board b = new Board(g);
-    	System.out.println(b.toString());
     }
     
 }

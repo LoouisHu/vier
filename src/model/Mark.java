@@ -10,6 +10,11 @@ public class Mark {
     public Mark(char mark) {
         this.mark = mark;
     }
+    
+    public Mark(char mark, Position p) {
+    	this.mark = mark;
+    	this.p = p;
+    }
 
     public char getMarkChar() {
         return mark;

@@ -2,6 +2,7 @@ package model;
 
 import java.util.ArrayList;
 
+import exceptions.IllegalIntegerException;
 import view.TUI;
 
 /**
@@ -18,7 +19,7 @@ public class Game extends Thread {
     private TUI tui;
     private int usedChars;
 
-    public Game() {
+    public Game() throws IllegalIntegerException {
     	board = new Board(this);
     	tui = new TUI();
     	manyPlayers = tui.askHowManyPlayers();
@@ -42,11 +43,11 @@ public class Game extends Thread {
     }
     
     public void start() {
-    	//TODO
     	boolean running = true;
     	while (running) {
-    		reset();
     		play();
+    		running = false;
+    		reset();
     	}
  
     }
@@ -72,7 +73,8 @@ public class Game extends Thread {
     }
     
     private void printResult() {
-    	//TODO
+    	System.out.println("The winner is " + players.get(current).getName() + "! "
+    			+ "Congratulations!");
     }
     
     public ArrayList<Player> getPlayers() {
@@ -87,10 +89,6 @@ public class Game extends Thread {
     	return manyComputerPlayers;
     }
     
-//    public char[] getAlphabet() {
-//    	return alphabet;
-//    }
-//    
     public Board getBoard() {
     	return board;
     }
