@@ -23,7 +23,7 @@ public class Board {
                 availablePositions.add(new Position(i, j, 0));
             }
         }
-        this.zAxis = 1;
+        zAxis = 1;
     }
 
   
@@ -157,6 +157,106 @@ public class Board {
     public boolean hasDiagonalFour(Mark m) {
     	boolean result = false;
     	
+    	char mark = m.getMarkChar();
+    	int x = m.getPosition().getX();
+    	int y = m.getPosition().getY();
+    	int z = m.getPosition().getZ();
+    	
+    	if (zAxis >= 4) {
+        	HashMap<Position, Mark> allMarks = this.getPlayedMarks();
+        	HashMap<Position, Mark> specificMarks = new HashMap<Position, Mark>();
+      
+         	for (Mark setMark: allMarks.values()) {
+        		if (setMark.getMarkChar() == mark) {
+        			specificMarks.put(new Position(x, y, z), new Mark(mark));
+        		}
+        	}
+         	
+         	Set<Position> specificPosses = specificMarks.keySet();
+         	
+         	for (Position p : specificPosses) {
+         		if (isCorner(p)) {
+         			if (specificPosses.contains(new Position(0, 1, p.getZ() + 1))
+         					&& specificPosses.contains(new Position(0, 2, p.getZ() + 2))
+         					&& specificPosses.contains(new Position(0, 3, p.getZ() + 3))) {
+         				result = true;
+         				break;
+         			}
+         			if (specificPosses.contains(new Position(0, 1, p.getZ() - 3))
+         					&& specificPosses.contains(new Position(0, 2, p.getZ() - 2))
+         					&& specificPosses.contains(new Position(0, 3, p.getZ() - 1))) {
+         				result = true;
+         				break;
+         			}
+         			
+         			if (specificPosses.contains(new Position(1, 0, p.getZ() + 1))
+         					&& specificPosses.contains(new Position(2, 0, p.getZ() + 2))
+         					&& specificPosses.contains(new Position(3, 0, p.getZ() + 3))) {
+         				result = true;
+         				break;
+         			}
+         			if (specificPosses.contains(new Position(1, 0, p.getZ() - 3))
+         					&& specificPosses.contains(new Position(2, 0, p.getZ() - 2))
+         					&& specificPosses.contains(new Position(3, 0, p.getZ() - 1))) {
+         				result = true;
+         				break;
+         			}
+         			
+         			if (specificPosses.contains(new Position(1, 3, p.getZ() + 1))
+         					&& specificPosses.contains(new Position(2, 3, p.getZ() + 2))
+         					&& specificPosses.contains(new Position(3, 3, p.getZ() + 3))) {
+         				result = true;
+         				break;
+         			}
+         			if (specificPosses.contains(new Position(1, 3, p.getZ() - 3))
+         					&& specificPosses.contains(new Position(2, 3, p.getZ() - 2))
+         					&& specificPosses.contains(new Position(3, 3, p.getZ() - 1))) {
+         				result = true;
+         				break;
+         			}
+         			
+         			if (specificPosses.contains(new Position(3, 1, p.getZ() + 1))
+         					&& specificPosses.contains(new Position(3, 2, p.getZ() + 2))
+         					&& specificPosses.contains(new Position(3, 3, p.getZ() + 3))) {
+         				result = true;
+         				break;
+         			}
+         			if (specificPosses.contains(new Position(3, 1, p.getZ() - 3))
+         					&& specificPosses.contains(new Position(3, 2, p.getZ() - 2))
+         					&& specificPosses.contains(new Position(3, 3, p.getZ() - 1))) {
+         				result = true;
+         				break;
+         			}
+         			
+         			if (specificPosses.contains(new Position(1, 1, p.getZ() + 1))
+         					&& specificPosses.contains(new Position(2, 2, p.getZ() + 2))
+         					&& specificPosses.contains(new Position(3, 3, p.getZ() + 3))) {
+         				result = true;
+         				break;
+         			}
+         			if (specificPosses.contains(new Position(1, 1, p.getZ() - 3))
+         					&& specificPosses.contains(new Position(2, 2, p.getZ() - 2))
+         					&& specificPosses.contains(new Position(3, 3, p.getZ() - 1))) {
+         				result = true;
+         				break;
+         			}
+         			
+         			if (specificPosses.contains(new Position(2, 1, p.getZ() + 1))
+         					&& specificPosses.contains(new Position(1, 2, p.getZ() + 2))
+         					&& specificPosses.contains(new Position(0, 3, p.getZ() + 3))) {
+         				result = true;
+         				break;
+         			}
+         			if (specificPosses.contains(new Position(2, 1, p.getZ() - 3))
+         					&& specificPosses.contains(new Position(1, 2, p.getZ() - 2))
+         					&& specificPosses.contains(new Position(0, 3, p.getZ() - 1))) {
+         				result = true;
+         				break;
+         			}
+         		}
+         	}
+    	}
+    	
     	return result;
     }
     
@@ -185,18 +285,40 @@ public class Board {
     	return result;
     }
     
+    public boolean isCorner(Position p) {
+    	boolean result = false;
+    	
+    	if (p.getX() == 0 && p.getY() == 0) {
+    		result = true;
+    	}
+    	
+    	if (p.getX() == 3 && p.getY() == 3) {
+    		result = true;
+    	}
+    	
+    	if (p.getX() == 0 && p.getY() == 3) {
+    		result = true;
+    	}
+    	
+    	if (p.getX() == 3 && p.getY() == 0) {
+    		result = true;
+    	}
+    	
+    	return result;
+    }
+    
     public boolean isWinner(Game g) {
     	boolean result = false;
     	for (Player p : g.getPlayers()) {
-    		if (hasDiagonalFour(p.getMark())) {
+    		if (hasDiagonalFour(p.getMark()) || hasAdjacentFour(p.getMark())) {
     			result = true;
     		}
     	}
     	return result;
     }
 
-    public boolean gameOver() {
-    	return false; //TODO
+    public boolean gameOver(Game g) {
+    	return isWinner(g);
     }
     
     public String toString() {
@@ -223,10 +345,10 @@ public class Board {
     	return result.toString();
     }
    
-//    public static void main(String[] args) {
-//    	Game g = new Game();
-//    	Board b = new Board(g);
-//    	System.out.println(b.toString());
-//    }
+    public static void main(String[] args) {
+    	Game g = new Game();
+    	Board b = new Board(g);
+    	System.out.println(b.toString());
+    }
     
 }

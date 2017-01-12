@@ -43,8 +43,8 @@ public class Game extends Thread {
     
     public void start() {
     	//TODO
-    	boolean gogo = true;
-    	while (gogo) {
+    	boolean running = true;
+    	while (running) {
     		reset();
     		play();
     	}
@@ -53,7 +53,7 @@ public class Game extends Thread {
     
     private void play() {
     	update();
-    	while (!board.gameOver()) {
+    	while (!board.gameOver(this)) {
     		players.get(current).makeMove(board);
     		update();
     		current = (current + 1) % players.size();
