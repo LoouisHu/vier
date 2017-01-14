@@ -18,11 +18,14 @@ public class Board {
     public Board(Game game) {
         playedMarks = new HashMap<Position, Mark>();
         availablePositions = new HashSet<Position>();
-        for (int i = 0; i < LENGTH; i++) {
-            for (int j = 0; j < LENGTH; j++) {
-                availablePositions.add(new Position(i, j, 0));
-            }
-        }
+        placeAvailablePositions();
+        zAxis = 1;
+    }
+    
+    public Board() {
+        playedMarks = new HashMap<Position, Mark>();
+        availablePositions = new HashSet<Position>();
+        placeAvailablePositions();
         zAxis = 1;
     }
   
@@ -38,17 +41,21 @@ public class Board {
         int x = mark.getPosition().getX();
         int y = mark.getPosition().getY();
         int z = mark.getPosition().getZ();
+        boolean played = false;
         if (!playedMarks.containsKey(new Position(x, y, z + 1))) {
         	for (Position p : playedMarks.keySet()) {
         		if (p.getX() == x && p.getY() == y) {
         			if (z <= p.getZ()) {
         				z = p.getZ() + 1;
         				playedMarks.put(new Position(x, y, z), mark);
+        				played = true;
         				break;
         			}
         		}
         	}
-        	playedMarks.put(new Position(x, y, z), mark);
+        	if (!played) {
+        		playedMarks.put(new Position(x, y, z), mark);
+        	}
             availablePositions.add(new Position(x, y, z + 1));
         }
         availablePositions.remove(new Position(x, y, z));
@@ -65,22 +72,32 @@ public class Board {
     public void reset() {
     	playedMarks.clear();
     	availablePositions.clear();
+    	placeAvailablePositions();
+    }
+    
+    public void placeAvailablePositions() {
         for (int i = 0; i < LENGTH; i++) {
             for (int j = 0; j < LENGTH; j++) {
                 availablePositions.add(new Position(i, j, 0));
             }
         }
-    	
     }
     
     public int getHighestZ() {
     	HashSet<Integer> zposes = new HashSet<Integer>();
+    	
     	if (playedMarks.keySet().size() == 0) {
     		return 1;
     	}
+    	
     	for (Position p : playedMarks.keySet()) {
     		zposes.add(p.getZ());
     	}
+    	
+    	if (Collections.max(zposes) == 0) {
+    		return 1;
+    	}
+    	
     	return Collections.max(zposes);
     }
     
@@ -179,79 +196,79 @@ public class Board {
          	for (Position p : specificPosses) {
          		if (isCorner(p)) {
          			if (specificPosses.contains(new Position(0, 1, p.getZ() + 1))
-         					&& specificPosses.contains(new Position(0, 2, p.getZ() + 2))
-         					&& specificPosses.contains(new Position(0, 3, p.getZ() + 3))) {
+         					  && specificPosses.contains(new Position(0, 2, p.getZ() + 2))
+         					  && specificPosses.contains(new Position(0, 3, p.getZ() + 3))) {
          				result = true;
          				break;
          			}
          			if (specificPosses.contains(new Position(0, 1, p.getZ() - 3))
-         					&& specificPosses.contains(new Position(0, 2, p.getZ() - 2))
-         					&& specificPosses.contains(new Position(0, 3, p.getZ() - 1))) {
+         					  && specificPosses.contains(new Position(0, 2, p.getZ() - 2))
+         					  && specificPosses.contains(new Position(0, 3, p.getZ() - 1))) {
          				result = true;
          				break;
          			}
          			
          			if (specificPosses.contains(new Position(1, 0, p.getZ() + 1))
-         					&& specificPosses.contains(new Position(2, 0, p.getZ() + 2))
-         					&& specificPosses.contains(new Position(3, 0, p.getZ() + 3))) {
+         					  && specificPosses.contains(new Position(2, 0, p.getZ() + 2))
+         					  && specificPosses.contains(new Position(3, 0, p.getZ() + 3))) {
          				result = true;
          				break;
          			}
          			if (specificPosses.contains(new Position(1, 0, p.getZ() - 3))
-         					&& specificPosses.contains(new Position(2, 0, p.getZ() - 2))
-         					&& specificPosses.contains(new Position(3, 0, p.getZ() - 1))) {
+         					  && specificPosses.contains(new Position(2, 0, p.getZ() - 2))
+         					  && specificPosses.contains(new Position(3, 0, p.getZ() - 1))) {
          				result = true;
          				break;
          			}
          			
          			if (specificPosses.contains(new Position(1, 3, p.getZ() + 1))
-         					&& specificPosses.contains(new Position(2, 3, p.getZ() + 2))
-         					&& specificPosses.contains(new Position(3, 3, p.getZ() + 3))) {
+         				 	  && specificPosses.contains(new Position(2, 3, p.getZ() + 2))
+         					  && specificPosses.contains(new Position(3, 3, p.getZ() + 3))) {
          				result = true;
          				break;
          			}
          			if (specificPosses.contains(new Position(1, 3, p.getZ() - 3))
-         					&& specificPosses.contains(new Position(2, 3, p.getZ() - 2))
-         					&& specificPosses.contains(new Position(3, 3, p.getZ() - 1))) {
+         					  && specificPosses.contains(new Position(2, 3, p.getZ() - 2))
+         					  && specificPosses.contains(new Position(3, 3, p.getZ() - 1))) {
          				result = true;
          				break;
          			}
          			
          			if (specificPosses.contains(new Position(3, 1, p.getZ() + 1))
-         					&& specificPosses.contains(new Position(3, 2, p.getZ() + 2))
-         					&& specificPosses.contains(new Position(3, 3, p.getZ() + 3))) {
+         					  && specificPosses.contains(new Position(3, 2, p.getZ() + 2))
+         					  && specificPosses.contains(new Position(3, 3, p.getZ() + 3))) {
          				result = true;
          				break;
          			}
          			if (specificPosses.contains(new Position(3, 1, p.getZ() - 3))
-         					&& specificPosses.contains(new Position(3, 2, p.getZ() - 2))
-         					&& specificPosses.contains(new Position(3, 3, p.getZ() - 1))) {
+         					  && specificPosses.contains(new Position(3, 2, p.getZ() - 2))
+         					  && specificPosses.contains(new Position(3, 3, p.getZ() - 1))) {
          				result = true;
          				break;
          			}
          			
          			if (specificPosses.contains(new Position(1, 1, p.getZ() + 1))
-         					&& specificPosses.contains(new Position(2, 2, p.getZ() + 2))
-         					&& specificPosses.contains(new Position(3, 3, p.getZ() + 3))) {
+         					  && specificPosses.contains(new Position(2, 2, p.getZ() + 2))
+         					  && specificPosses.contains(new Position(3, 3, p.getZ() + 3))) {
          				result = true;
          				break;
          			}
          			if (specificPosses.contains(new Position(1, 1, p.getZ() - 3))
-         					&& specificPosses.contains(new Position(2, 2, p.getZ() - 2))
-         					&& specificPosses.contains(new Position(3, 3, p.getZ() - 1))) {
+         					  && specificPosses.contains(new Position(2, 2, p.getZ() - 2))
+         					  && specificPosses.contains(new Position(3, 3, p.getZ() - 1))) {
          				result = true;
          				break;
          			}
          			
          			if (specificPosses.contains(new Position(2, 1, p.getZ() + 1))
-         					&& specificPosses.contains(new Position(1, 2, p.getZ() + 2))
-         					&& specificPosses.contains(new Position(0, 3, p.getZ() + 3))) {
+         					  && specificPosses.contains(new Position(1, 2, p.getZ() + 2))
+         					  && specificPosses.contains(new Position(0, 3, p.getZ() + 3))) {
          				result = true;
          				break;
          			}
          			if (specificPosses.contains(new Position(2, 1, p.getZ() - 3))
-         					&& specificPosses.contains(new Position(1, 2, p.getZ() - 2))
-         					&& specificPosses.contains(new Position(0, 3, p.getZ() - 1))) {
+         					  && specificPosses.contains(new Position(1, 2, p.getZ() - 2))
+         					  && specificPosses.contains(new Position(0, 3, p.getZ() - 1))) {
          				result = true;
          				break;
          			}
@@ -332,10 +349,16 @@ public class Board {
     		for (int j = 0; j < LENGTH; j++) {
     			result.append("  " + (j + 1) + "|");
     			for (int k = 0; k < LENGTH; k++) {
-    				if (playedMarks.keySet().contains(new Position(j, k, i))) {
-    					result.append(playedMarks.get(new Position(j, k, i)).getMarkChar() + "|");
-    				} else {
-    					result.append(" |");
+					Position checkPos = new Position(k, j, i);
+					boolean placed = false;
+    				for (Position p : playedMarks.keySet()) {
+    					if (p.equals(checkPos)) {
+    						result.append(playedMarks
+    								  .get(new Position(k, j, i)).getMarkChar() + "|");
+    						placed = true;
+    					} else {
+    						result.append(" |");
+    					}
     				}
     				if (k == LENGTH - 1) {
     					result.append("\n");
@@ -348,8 +371,11 @@ public class Board {
     	}
     	return result.toString();
     }
-   
-    public static void main(String[] args) {
-    }
     
+    public static void main(String[] args) {
+    	Board board = new Board();
+    	Position p = new Position(3, 3, 3);
+    	board.setMark(new Mark('a', p));
+    	System.out.println(board.getPlayedMarks().keySet().toArray()[0].equals(p));
+    }
 }

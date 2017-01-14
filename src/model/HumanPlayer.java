@@ -20,7 +20,7 @@ public class HumanPlayer extends Player {
 	public Mark determineMove(Board board) {
 		boolean valid = false;	
 		Set<Position> availablePositions = board.getAvailablePositions();
-		Position pAsk = new Position(-1, -1, 0);
+		Position pAsk = new Position(-1, -1, -1);
 		
 		outer: while (!valid) {
 			try {
@@ -35,12 +35,13 @@ public class HumanPlayer extends Player {
 				}
 			}
 			System.out.println("ERROR: position (" + pAsk.getX() + ", " + pAsk.getY() +
-					") is no valid choice.");
+					  ") is no valid choice.");
 			
 		}
 
-		Mark m = new Mark(getMark().getMarkChar(), pAsk);
-		
+		Mark m = new Mark(this.getMark().getMarkChar(), pAsk);
+		System.out.println("[HumanPlayer][determineMove()] Mark of player " 
+					  + this.getName() + ": " + m.getMarkChar());
 	//	m.getPosition().setXYZ(pAsk.getX(), pAsk.getY(), 0);
 		
 		return m;

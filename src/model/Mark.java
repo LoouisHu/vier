@@ -7,8 +7,8 @@ public class Mark {
     private char mark;
     private Position p;
 
-    public Mark(char mark) {
-        this.mark = mark;
+    public Mark(char newMark) {
+        this.mark = newMark;
     }
     
     public Mark(char mark, Position p) {
@@ -23,4 +23,5 @@ public class Mark {
     public Position getPosition() {
     	return p;
     }
+    
 }
