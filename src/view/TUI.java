@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 import exceptions.IllegalIntegerException;
 import exceptions.IllegalStringException;
+import model.Board;
 import model.Game;
 import model.HumanPlayer;
 import model.Position;
@@ -103,5 +104,9 @@ public class TUI {
 		
 		
 		return result;
+	}
+	
+	public void updateGameState(Board board) {
+		System.out.println("\nCurrent game situation: \n\n" + board.toString());
 	}
 }

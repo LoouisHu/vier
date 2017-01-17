@@ -23,7 +23,7 @@ public class Client {
 		String command = split[0];
 		
 		if (split[0] == "GAME" || split[0] == "CHALLENGE" || split[0] == "CHAT" 
-				|| split[0] == "LEADERBOARD") {
+			      || split[0] == "LEADERBOARD") {
 			command = command + " " + split[1];
 		}
 		

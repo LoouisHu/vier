@@ -21,14 +21,14 @@ public class Board {
         placeAvailablePositions();
         zAxis = 1;
     }
-    
+  
     public Board() {
         playedMarks = new HashMap<Position, Mark>();
         availablePositions = new HashSet<Position>();
         placeAvailablePositions();
         zAxis = 1;
     }
-  
+    
     public HashMap<Position, Mark> getPlayedMarks() {
         return playedMarks;
     }
@@ -53,7 +53,6 @@ public class Board {
         
         availablePositions.remove(new Position(x, y, z));
         zAxis = getHighestZ();
-        System.out.println("setMark = (" + x + ", " + y + ", " + z + ")");
     }
     
     public Board deepCopy(Game g) {
@@ -97,7 +96,7 @@ public class Board {
     
     public int getHighestZfromXY(int x, int y) {
     	HashMap<Position, Mark> playMarks = playedMarks;
-    	int result = 1;
+    	int result = 0;
     	for (int i = 0; i < zAxis; i++) {
     		if (playMarks.containsKey(new Position(x, y, i + 1))) {
     			result++;
@@ -125,10 +124,10 @@ public class Board {
     	Set<Position> possiblePosses = new HashSet<Position>();
     	
     	outer: for (int i = 0; i < zAxis; i++) {
-    		for (int j = 0; i < LENGTH; j++) {
-    			for (int k = 0; i < LENGTH; k++) {
+    		for (int j = 0; j < LENGTH; j++) {
+    			for (int k = 0; k < LENGTH; k++) {
     				Position searchPos = new Position(k + 1, j + 1, i + 1);
-    				if (playedMarks.get(searchPos).getMarkChar() == mark) {
+    				if (playedMarks.containsKey(searchPos) && playedMarks.containsValue(mark)) {
     					four++;
     					possiblePosses.add(searchPos);
     					if (four == 4) {
@@ -358,16 +357,12 @@ public class Board {
     }
     
     public static void main(String[] args) {
-//    	Board board = new Board();
-//    	Player p = new HumanPlayer("Louis", new Mark('a'));
-//    	p.makeMove(board);
-//    	p.makeMove(board);
-//    	p.makeMove(board);
-//    	p.makeMove(board);
-//    	System.out.println(board.hasFour(p.getMark()));
+    	Board board = new Board();
+    	board.setMark(new Mark('a', new Position(1, 1, 1)));
+    	board.setMark(new Mark('a', new Position(1, 1, 2)));
+    	board.setMark(new Mark('a', new Position(1, 1, 3)));
+    	System.out.println(board.getHighestZfromXY(1, 1));
     	
-    	String s = "this is a test";
-    	String[] split = s.split("\\s+");
-    	System.out.println(split[0] + split[3]);
+    	
     }
 }

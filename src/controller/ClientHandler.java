@@ -55,7 +55,7 @@ public class ClientHandler extends Thread {
 		String command = split[0];
 		
 		if (command == "GAME" || command == "CHALLENGE" || command == "CHAT"
-				|| command == "LEADERBOARD") {
+				  || command == "LEADERBOARD") {
 			command = command + " " + split[1];
 		}
 		

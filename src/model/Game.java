@@ -64,7 +64,7 @@ public class Game extends Thread {
     }
     
     private void update() {
-    	System.out.println("\nCurrent game situation: \n\n" + board.toString());
+    	tui.updateGameState(board);
     }
     
     private void reset() {
