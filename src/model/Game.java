@@ -3,6 +3,7 @@ package model;
 import java.util.ArrayList;
 
 import exceptions.IllegalIntegerException;
+import exceptions.IllegalStringException;
 import view.TUI;
 
 /**
@@ -19,7 +20,7 @@ public class Game extends Thread {
     private TUI tui;
     private int usedChars;
 
-    public Game() throws IllegalIntegerException {
+    public Game() throws IllegalIntegerException, IllegalStringException {
     	board = new Board(this);
     	tui = new TUI();
     	manyPlayers = tui.askHowManyPlayers();

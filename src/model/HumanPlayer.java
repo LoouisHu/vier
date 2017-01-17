@@ -1,7 +1,5 @@
 package model;
 
-import java.util.Set;
-
 import exceptions.IllegalIntegerException;
 import view.TUI;
 
@@ -18,32 +16,20 @@ public class HumanPlayer extends Player {
 	}
 
 	public Mark determineMove(Board board) {
-		boolean valid = false;	
-		Set<Position> availablePositions = board.getAvailablePositions();
-		Position pAsk = new Position(-1, -1, -1);
-		
-		outer: while (!valid) {
-			try {
-				pAsk = tui.askPosition();
-			} catch (IllegalIntegerException e) {
-				e.printStackTrace();
-			}
-			for (Position pos : availablePositions) {
-				if (pAsk.getX() == pos.getX() && pAsk.getY() == pos.getY()) {
-					valid = true;
-					break outer;
-				}
-			}
-			System.out.println("ERROR: position (" + pAsk.getX() + ", " + pAsk.getY() +
-					  ") is no valid choice.");
-			
+		Position pAsk = new Position(0, 0);
+		try {
+			pAsk = tui.askPosition(this);
+		} catch (IllegalIntegerException e) {
+			e.getMessage();
 		}
-
-		Mark m = new Mark(this.getMark().getMarkChar(), pAsk);
-		System.out.println("[HumanPlayer][determineMove()] Mark of player " 
-					  + this.getName() + ": " + m.getMarkChar());
-	//	m.getPosition().setXYZ(pAsk.getX(), pAsk.getY(), 0);
 		
+		Position result = new Position(pAsk.getX(), pAsk.getY(), 
+				board.getHighestZfromXY(pAsk.getX(), pAsk.getY()));
+		
+		Mark m = new Mark(this.getMark().getMarkChar(), result);
+		System.out.println("determineMove = (" + 
+				  m.getPosition().getX() + ", " + m.getPosition().getY() + ", " 
+				+ m.getPosition().getZ() + ")");
 		return m;
 	}
 }

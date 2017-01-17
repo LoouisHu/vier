@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import exceptions.IllegalIntegerException;
+import exceptions.IllegalStringException;
 import model.Game;
+import model.HumanPlayer;
 import model.Position;
 import model.Strategy;
 import model.TrumpStrategy;
 
-//TODO Throw exceptions, maybe? Wrong inputs can go wrong.
 
 public class TUI {
 	
@@ -42,14 +43,14 @@ public class TUI {
 		return players;
 	}
 	
-	public Position askPosition() throws IllegalIntegerException {
+	public Position askPosition(HumanPlayer player) throws IllegalIntegerException {
 		Position p;
 		int x = -1;
 		int y = -1;
 		
-		System.out.print("What's your x? (1-4): ");
+		System.out.print(player.getName() + ", what's your x? (1-4): ");
 		x = sc.nextInt();
-		System.out.print("What's your y? (1-4): ");
+		System.out.print(player.getName() + ", what's your y? (1-4): ");
 		y = sc.nextInt();
 		
 		if (x < 1 || x > 4) {
@@ -60,18 +61,25 @@ public class TUI {
 			throw new IllegalIntegerException(y);
 		}
 		
-		p = new Position(x - 1, y - 1, 0);
+		p = new Position(x, y);
 		return p;
 	}
 	
-	public ArrayList<String> askNames(Game g) {
+	public ArrayList<String> askNames(Game g) throws IllegalStringException {
 		ArrayList<String> names = new ArrayList<String>();
 		System.out.println("Set player names:");
 		
 		for (int i = 0; i < g.getManyPlayers(); i++) {
 			System.out.println("What's the name of Player " + (i + 1) + "?");
+			
 			String s = sc.next();
+			
+			if (!s.matches("^[-\\w.]+")) {
+				throw new IllegalStringException(s);
+			}
+			
 			names.add(s);
+			System.out.println("Added player " + s);
 		}
 		return names;
 	}
@@ -87,6 +95,7 @@ public class TUI {
 				result.add(new TrumpStrategy());
 			} else {
 				System.out.println("WRONG! We'll make this game GREAT AGAIN!");
+				System.out.println("(Trump Strategy has been assigned)");
 				result.add(new TrumpStrategy());
 			}
 

@@ -13,6 +13,7 @@ public class ComputerPlayer extends Player {
 	
 	@Override
 	public Mark determineMove(Board board) {
+		System.out.println(this.getName() + " has made its move!");
 		return strategy.determineMove(board, mark);
 	}
 
