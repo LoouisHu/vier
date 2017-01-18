@@ -23,7 +23,7 @@ public class ClientHandler implements Runnable {
 			out = new BufferedWriter(new OutputStreamWriter(this.socket.getOutputStream()));
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		} 
 		
 	}
 	

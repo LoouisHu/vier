@@ -1,16 +1,30 @@
 package controller;
 
+import java.util.List;
 
-public interface Server {
+public class Server implements Runnable {
 	
-	public static final int PORT = 4444;
-	
-	public static final String ADDRESS = "localhost";
-	
-	void sendMessage(String message, ClientHandler client);
-	
-	void broadcast(String message);
-	
-	void removeHandler(ClientHandler client);
+	List<ClientHandler> clients;
+
+	public void sendMessage(String message, ClientHandler client) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void broadcast(String message) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void removeHandler(ClientHandler client) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

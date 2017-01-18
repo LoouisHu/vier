@@ -1,5 +1,7 @@
 package controller;
 
+import org.json.*;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -8,25 +10,29 @@ import java.io.OutputStreamWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 
-import model.HumanPlayer;
+import model.Player;
 
 public class Client implements Runnable {
 	
 	private String clientName;
-	private Socket sock;
+	private Socket socket;
 	private BufferedReader in;
 	private BufferedWriter out;
-	private HumanPlayer player;
+	private Player player;
 	
-	public Client(InetAddress host, int port) throws IOException {
-		sock = new Socket(host, port);
+	public Client() throws IOException {
+		socket = new Socket(InetAddress.getLocalHost(), 8080);
 		
 		try {
-			in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
-			out = new BufferedWriter(new OutputStreamWriter(sock.getOutputStream()));
+			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 		} catch (IOException e) {
 			System.out.print(e.getMessage());
 		}
+	}
+	
+	public void connect() {
+		JSONObject obj = new JSONObject();
 	}
 	
 	@Override
@@ -36,7 +42,7 @@ public class Client implements Runnable {
 		}
 	}
 	
-	private void receiveMessage() {
+	public void receiveMessage() {
 		try {
 			while (true) {
 				while (in.ready()) {
@@ -59,6 +65,10 @@ public class Client implements Runnable {
 	 * @param message
 	 */
 	public void handleMessage(String message) {
+		
+		if (message.length() < 1) {
+			return;
+		}
 		
 		String[] split = message.split("\\s+");
 		
