@@ -18,18 +18,15 @@ public class HumanPlayer extends Player {
 	public Mark determineMove(Board board) {
 		Position pAsk = new Position(0, 0);
 		try {
-			pAsk = tui.askPosition(this);
+			pAsk = tui.askPosition(this, board);
 		} catch (IllegalIntegerException e) {
 			e.getMessage();
 		}
 		
 		Position result = new Position(pAsk.getX(), pAsk.getY(), 
 				board.getHighestZfromXY(pAsk.getX(), pAsk.getY()));
+		Mark m = new Mark(this.getMark().getChar(), result);
 		
-		Mark m = new Mark(this.getMark().getMarkChar(), result);
-		System.out.println("determineMove = (" + 
-				  m.getPosition().getX() + ", " + m.getPosition().getY() + ", " 
-				+ m.getPosition().getZ() + ")");
 		return m;
 	}
 }

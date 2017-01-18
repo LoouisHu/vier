@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import exceptions.IllegalIntegerException;
 import exceptions.IllegalStringException;
@@ -19,10 +20,13 @@ public class Game extends Thread {
     private int manyComputerPlayers;
     private TUI tui;
     private int usedChars;
+    private List<Integer> boardSize;
 
     public Game() throws IllegalIntegerException, IllegalStringException {
-    	board = new Board(this);
     	tui = new TUI();
+    	boardSize = new ArrayList<Integer>();
+    	boardSize.addAll(tui.askBoardSize(this));
+    	board = new Board(boardSize.get(0), boardSize.get(1));
     	manyPlayers = tui.askHowManyPlayers();
     	manyComputerPlayers = tui.askHowManyComputerPlayers(this);
     	manyPlayers = manyPlayers - manyComputerPlayers;
@@ -55,7 +59,7 @@ public class Game extends Thread {
     
     private void play() {
     	update();
-    	while (!board.gameOver(this)) {
+    	while (!board.gameOver(players.get(current))) {
     		players.get(current).makeMove(board);
     		update();
     		current = (current + 1) % players.size();

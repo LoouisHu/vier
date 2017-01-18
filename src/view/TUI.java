@@ -1,6 +1,7 @@
 package view;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import exceptions.IllegalIntegerException;
@@ -44,21 +45,21 @@ public class TUI {
 		return players;
 	}
 	
-	public Position askPosition(HumanPlayer player) throws IllegalIntegerException {
+	public Position askPosition(HumanPlayer player, Board board) throws IllegalIntegerException {
 		Position p;
 		int x = -1;
 		int y = -1;
 		
-		System.out.print(player.getName() + ", what's your x? (1-4): ");
+		System.out.print(player.getName() + ", what's your x? (1-" + board.getXAxis() + "): ");
 		x = sc.nextInt();
-		System.out.print(player.getName() + ", what's your y? (1-4): ");
+		System.out.print(player.getName() + ", what's your y? (1-" + board.getYAxis() + "): ");
 		y = sc.nextInt();
 		
-		if (x < 1 || x > 4) {
+		if (x < 1 || x > board.getXAxis()) {
 			throw new IllegalIntegerException(x);
 		}
 		
-		if (y < 1 || y > 4) {
+		if (y < 1 || y > board.getYAxis()) {
 			throw new IllegalIntegerException(y);
 		}
 		
@@ -82,6 +83,7 @@ public class TUI {
 			names.add(s);
 			System.out.println("Added player " + s);
 		}
+		
 		return names;
 	}
 	
@@ -103,6 +105,34 @@ public class TUI {
 		}
 		
 		
+		return result;
+	}
+	
+	public List<Integer> askBoardSize(Game g) throws IllegalIntegerException {
+		List<Integer> result = new ArrayList<Integer>();
+		int x = -1;
+		int y = -1;
+		try {
+			System.out.println("Choose the size of the board (between 4-9):");
+			System.out.print("X = ");
+			x = sc.nextInt();
+			System.out.print("Y = ");
+			y = sc.nextInt();
+		} catch (NumberFormatException e) {
+			e.getMessage();
+		}
+		
+		if (x < 4 || x > 9) {
+			throw new IllegalIntegerException(x);
+		}
+		
+		if (y < 4 || y > 9) {
+			throw new IllegalIntegerException(y);
+		}
+		
+		result.add(x);
+		result.add(y);
+	
 		return result;
 	}
 	

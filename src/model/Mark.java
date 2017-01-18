@@ -16,7 +16,7 @@ public class Mark {
     	this.p = p;
     }
 
-    public char getMarkChar() {
+    public char getChar() {
         return mark;
     }
 

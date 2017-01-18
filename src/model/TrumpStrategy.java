@@ -19,7 +19,7 @@ public class TrumpStrategy implements Strategy {
 	@Override
 	public Mark determineMove(Board b, Mark m) {
 		Set<Position> availablePosses = b.getAvailablePositions();
-		Mark mark = new Mark(m.getMarkChar());
+		Mark mark = new Mark(m.getChar());
 		int randomInt = new Random().nextInt(availablePosses.size());
 		int i = 0;
 		for (Position p : availablePosses) {

@@ -1,4 +1,5 @@
-package miranda;
+package controller;
+
 
 public class MirandaClient {
 	
