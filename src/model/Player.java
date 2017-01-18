@@ -11,7 +11,7 @@ public abstract class Player {
 	public Player(String playerName, Mark playerMark) {
 		this.name = playerName;
 		this.mark = playerMark;
-	}
+	} 
 	
 	public String getName() {
 		return name;

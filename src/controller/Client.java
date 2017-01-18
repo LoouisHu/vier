@@ -1,15 +1,57 @@
 package controller;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.InetAddress;
 import java.net.Socket;
 
-public class Client {
+import model.HumanPlayer;
+
+public class Client implements Runnable {
 	
 	private String clientName;
-	private ClientHandler ch;
+	private Socket sock;
+	private BufferedReader in;
+	private BufferedWriter out;
+	private HumanPlayer player;
 	
-	public Client(Socket sock, String clientName) {
-		ch = new ClientHandler(sock);
-		this.clientName = clientName;
+	public Client(InetAddress host, int port) throws IOException {
+		sock = new Socket(host, port);
+		
+		try {
+			in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
+			out = new BufferedWriter(new OutputStreamWriter(sock.getOutputStream()));
+		} catch (IOException e) {
+			System.out.print(e.getMessage());
+		}
+	}
+	
+	@Override
+	public void run() {
+		while (true) {
+			receiveMessage();
+		}
+	}
+	
+	private void receiveMessage() {
+		try {
+			while (true) {
+				while (in.ready()) {
+					handleMessage(in.readLine());
+				}
+			}
+		} catch (IOException e) {
+			
+		} finally {
+			try {
+				in.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	/**

@@ -16,12 +16,13 @@ public class BoardTest {
 	
 	@Before
 	public void setUp() {
-		board = new Board(4, 4);
+		board = new Board(9);
 	}
 	
 	@Test
 	public void testInitialBoardState() {
-		assertEquals(board.getAvailablePositions().size(), 16);
+		assertEquals(board.getAvailablePositions().size(), 
+				board.getBoardLength() * board.getBoardLength());
 		assertEquals(board.getPlayedMarks().size(), 0);
 	}
 	
@@ -59,7 +60,7 @@ public class BoardTest {
 			board.setMark(new Mark('d', new Position(2, 2, l + 1)));
 		}
 		assertTrue(board.hasFour(new Mark('d')));
-	}
+	} 
 	
 	@Test
 	public void testDiagonalHasFour() {
@@ -69,54 +70,23 @@ public class BoardTest {
 		board.setMark(new Mark('a', new Position(4, 4, 1)));
 		assertTrue(board.hasDiagonalFour(new Mark('a')));
 		
-		board.setMark(new Mark('b', new Position(1, 1, 4)));
-		board.setMark(new Mark('b', new Position(2, 1, 3)));
-		board.setMark(new Mark('b', new Position(3, 1, 2)));
-		board.setMark(new Mark('b', new Position(4, 1, 1)));
+		board.setMark(new Mark('b', new Position(9, 9, 4)));
+		board.setMark(new Mark('b', new Position(9, 8, 5)));
+		board.setMark(new Mark('b', new Position(9, 7, 6)));
+		board.setMark(new Mark('b', new Position(9, 6, 7)));
 		assertTrue(board.hasDiagonalFour(new Mark('b')));
 		
-		board.setMark(new Mark('c', new Position(1, 1, 1)));
-		board.setMark(new Mark('c', new Position(1, 2, 2)));
-		board.setMark(new Mark('c', new Position(1, 3, 3)));
-		board.setMark(new Mark('c', new Position(1, 4, 4)));
+		board.setMark(new Mark('c', new Position(6, 5, 4)));
+		board.setMark(new Mark('c', new Position(5, 6, 3)));
+		board.setMark(new Mark('c', new Position(4, 7, 2)));
+		board.setMark(new Mark('c', new Position(3, 8, 1)));
 		assertTrue(board.hasDiagonalFour(new Mark('c')));
 		
-		board.setMark(new Mark('d', new Position(1, 1, 4)));
-		board.setMark(new Mark('d', new Position(1, 2, 3)));
-		board.setMark(new Mark('d', new Position(1, 3, 2)));
-		board.setMark(new Mark('d', new Position(1, 4, 1)));
+		board.setMark(new Mark('d', new Position(3, 9, 2)));
+		board.setMark(new Mark('d', new Position(3, 8, 3)));
+		board.setMark(new Mark('d', new Position(3, 7, 4)));
+		board.setMark(new Mark('d', new Position(3, 6, 5)));
 		assertTrue(board.hasDiagonalFour(new Mark('d')));
-		
-		board.setMark(new Mark('e', new Position(1, 4, 1)));
-		board.setMark(new Mark('e', new Position(2, 4, 2)));
-		board.setMark(new Mark('e', new Position(3, 4, 3)));
-		board.setMark(new Mark('e', new Position(4, 4, 4)));
-		assertTrue(board.hasDiagonalFour(new Mark('e')));
-		
-		board.setMark(new Mark('f', new Position(1, 4, 4)));
-		board.setMark(new Mark('f', new Position(2, 4, 3)));
-		board.setMark(new Mark('f', new Position(3, 4, 2)));
-		board.setMark(new Mark('f', new Position(4, 4, 1)));
-		assertTrue(board.hasDiagonalFour(new Mark('f')));
-		
-		board.setMark(new Mark('g', new Position(4, 1, 1)));
-		board.setMark(new Mark('g', new Position(4, 2, 2)));
-		board.setMark(new Mark('g', new Position(4, 3, 3)));
-		board.setMark(new Mark('g', new Position(4, 4, 4)));
-		assertTrue(board.hasDiagonalFour(new Mark('g')));
-		
-		board.setMark(new Mark('h', new Position(4, 1, 4)));
-		board.setMark(new Mark('h', new Position(4, 2, 3)));
-		board.setMark(new Mark('h', new Position(4, 3, 2)));
-		board.setMark(new Mark('h', new Position(4, 4, 1)));
-		assertTrue(board.hasDiagonalFour(new Mark('h')));
-		
-		board.setMark(new Mark('i', new Position(2, 2, 3)));
-		assertFalse(board.hasDiagonalFour(new Mark('i')));
-		
-		board.setMark(new Mark('j', new Position(1, 1, 1)));
-		assertFalse(board.hasDiagonalFour(new Mark('j')));
-		
 	}
 
 }

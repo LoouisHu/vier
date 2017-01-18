@@ -24,10 +24,11 @@ public class TrumpStrategy implements Strategy {
 		int i = 0;
 		for (Position p : availablePosses) {
 			if (i == randomInt) {
-				mark.getPosition().setXYZ(p.getX(), p.getY(), p.getZ());
+				mark = new Mark(m.getChar(), new Position(p.getX(), p.getY(), p.getZ())); 
 			}
 			i++;
 		}
+
 		return mark;
 	}
 

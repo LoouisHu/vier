@@ -50,16 +50,16 @@ public class TUI {
 		int x = -1;
 		int y = -1;
 		
-		System.out.print(player.getName() + ", what's your x? (1-" + board.getXAxis() + "): ");
+		System.out.print(player.getName() + ", what's your x? (1-" + board.getBoardLength() + "): ");
 		x = sc.nextInt();
-		System.out.print(player.getName() + ", what's your y? (1-" + board.getYAxis() + "): ");
+		System.out.print(player.getName() + ", what's your y? (1-" + board.getBoardLength() + "): ");
 		y = sc.nextInt();
 		
-		if (x < 1 || x > board.getXAxis()) {
+		if (x < 1 || x > board.getBoardLength()) {
 			throw new IllegalIntegerException(x);
 		}
 		
-		if (y < 1 || y > board.getYAxis()) {
+		if (y < 1 || y > board.getBoardLength()) {
 			throw new IllegalIntegerException(y);
 		}
 		
@@ -108,32 +108,20 @@ public class TUI {
 		return result;
 	}
 	
-	public List<Integer> askBoardSize(Game g) throws IllegalIntegerException {
-		List<Integer> result = new ArrayList<Integer>();
-		int x = -1;
-		int y = -1;
+	public int askBoardSize() throws IllegalIntegerException {
+		int boardLength = -1;
 		try {
 			System.out.println("Choose the size of the board (between 4-9):");
-			System.out.print("X = ");
-			x = sc.nextInt();
-			System.out.print("Y = ");
-			y = sc.nextInt();
+			boardLength = sc.nextInt();
 		} catch (NumberFormatException e) {
 			e.getMessage();
 		}
 		
-		if (x < 4 || x > 9) {
-			throw new IllegalIntegerException(x);
+		if (boardLength < 4 || boardLength > 9) {
+			throw new IllegalIntegerException(boardLength);
 		}
-		
-		if (y < 4 || y > 9) {
-			throw new IllegalIntegerException(y);
-		}
-		
-		result.add(x);
-		result.add(y);
-	
-		return result;
+
+		return boardLength;
 	}
 	
 	public void updateGameState(Board board) {

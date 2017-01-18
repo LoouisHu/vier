@@ -13,33 +13,19 @@ public class Board {
     private HashMap<Position, Mark> playedMarks;
     private Set<Position> availablePositions;
     private int zAxis;
-    private int xAxis;
-    private int yAxis;
+    private int boardLength;
     
     //Testing purposes
-    public Board(int x, int y) {
-    	this.xAxis = x;
-    	this.yAxis = y;
+    public Board(int boardLength) {
+    	this.boardLength = boardLength;
         playedMarks = new HashMap<Position, Mark>();
         availablePositions = new HashSet<Position>();
         placeAvailablePositions();
         zAxis = 1;
     }
-    
-//    public Board(Game game) {
-//    	
-//        playedMarks = new HashMap<Position, Mark>();
-//        availablePositions = new HashSet<Position>();
-//        placeAvailablePositions();
-//        zAxis = 1;
-//    }
-    
-    public int getXAxis() {
-    	return xAxis;
-    }
-    
-    public int getYAxis() {
-    	return yAxis;
+
+    public int getBoardLength() {
+    	return boardLength;
     }
     
     public HashMap<Position, Mark> getPlayedMarks() {
@@ -69,7 +55,7 @@ public class Board {
     }
     
     public Board deepCopy(Game g) {
-    	Board b = new Board(zAxis, yAxis);
+    	Board b = new Board(boardLength);
     	b.availablePositions = this.getAvailablePositions();
     	b.playedMarks = this.getPlayedMarks();
     	return b;
@@ -82,8 +68,8 @@ public class Board {
     }
     
     private void placeAvailablePositions() {
-        for (int i = 0; i < xAxis; i++) {
-            for (int j = 0; j < yAxis; j++) {
+        for (int i = 0; i < boardLength; i++) {
+            for (int j = 0; j < boardLength; j++) {
                 availablePositions.add(new Position(i + 1, j + 1, 1));
             }
         }
@@ -280,13 +266,13 @@ public class Board {
 					.getChar() == markie.getChar()) {
     				result = true;
     				break;
-    			}
+    			} 
 				
 				if (playedMarks.containsKey(new Position(x, y - 1, z + 1))
 					&& playedMarks.get(new Position(x, y - 1, z + 1)).getChar() == markie.getChar()
 					&& playedMarks.containsKey(new Position(x, y - 2, z + 2))
 					&& playedMarks.get(new Position(x, y - 2, z + 2)).getChar() == markie.getChar()
-					&& playedMarks.containsKey(new Position(x, y - 2, z + 3))
+					&& playedMarks.containsKey(new Position(x, y - 3, z + 3))
 					&& playedMarks.get(new Position(x, y - 3, z + 3))
 					.getChar() == markie.getChar()) {
     				result = true;
@@ -479,9 +465,8 @@ public class Board {
     
     public String toString() {
     	StringBuilder result = new StringBuilder();
-    	String begin = "y\\x|1|2|3|4|\n";
     	result.append("y\\x|");
-    	for (int l = 0; l < xAxis; l++) {
+    	for (int l = 0; l < boardLength; l++) {
     		result.append(l + 1 + "|");
     	}
     	
@@ -491,10 +476,9 @@ public class Board {
     		if (zAxis == 0) {
     			result.append("The board is still empty! \n\n");
     		}
-    //		result.append(begin);
-    		for (int j = 0; j < yAxis; j++) {
+    		for (int j = 0; j < boardLength; j++) {
     			result.append("  " + (j + 1) + "|");
-    			for (int k = 0; k < xAxis; k++) {
+    			for (int k = 0; k < boardLength; k++) {
 					Position checkPos = new Position(k + 1, j + 1, i + 1);
 					boolean placed = false;
     				for (Position p : playedMarks.keySet()) {
@@ -508,7 +492,7 @@ public class Board {
     				if (!placed) {
         				result.append(" |");
     				}
-    				if (k == xAxis - 1) {
+    				if (k == boardLength - 1) {
     					result.append("\n");
     				}
     			}

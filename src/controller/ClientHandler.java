@@ -7,21 +7,24 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 
-public class ClientHandler extends Thread {
+public class ClientHandler implements Runnable {
 	
 	private Server server;
 	private Socket socket;
 	private BufferedReader in;
 	private BufferedWriter out;
 	
-	public ClientHandler(Socket socket) {
+	public ClientHandler(Server server, Socket socket) {
+		this.server = server;
 		this.socket = socket;
+		
 		try {
 			in = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
 			out = new BufferedWriter(new OutputStreamWriter(this.socket.getOutputStream()));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
 	}
 	
 	@Override

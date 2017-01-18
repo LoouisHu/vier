@@ -20,13 +20,10 @@ public class Game extends Thread {
     private int manyComputerPlayers;
     private TUI tui;
     private int usedChars;
-    private List<Integer> boardSize;
-
+ 
     public Game() throws IllegalIntegerException, IllegalStringException {
     	tui = new TUI();
-    	boardSize = new ArrayList<Integer>();
-    	boardSize.addAll(tui.askBoardSize(this));
-    	board = new Board(boardSize.get(0), boardSize.get(1));
+    	board = new Board(tui.askBoardSize());
     	manyPlayers = tui.askHowManyPlayers();
     	manyComputerPlayers = tui.askHowManyComputerPlayers(this);
     	manyPlayers = manyPlayers - manyComputerPlayers;
@@ -42,6 +39,7 @@ public class Game extends Thread {
     		ArrayList<Strategy> strategies = tui.askStrategies(this);
     		for (int i = 0; i < strategies.size(); i++) {
     			player = new ComputerPlayer(strategies.get(i), new Mark(alphabet[usedChars + i]));
+    			players.add(player);
     		}
     	}
     	current = 0;
@@ -59,9 +57,14 @@ public class Game extends Thread {
     
     private void play() {
     	update();
-    	while (!board.gameOver(players.get(current))) {
+    	boolean gameOver = false;
+    	while (!gameOver) {
     		players.get(current).makeMove(board);
     		update();
+    		gameOver = board.gameOver(players.get(current));
+    		if (gameOver == true) {
+    			break;
+    		}
     		current = (current + 1) % players.size();
     	}
     	printResult();

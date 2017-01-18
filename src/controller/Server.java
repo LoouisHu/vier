@@ -1,11 +1,16 @@
 package controller;
 
-import java.net.ServerSocket;
 
-public class Server {
+public interface Server {
 	
-	private static int port;
+	public static final int PORT = 4444;
 	
-	private ServerSocket server;
+	public static final String ADDRESS = "localhost";
+	
+	void sendMessage(String message, ClientHandler client);
+	
+	void broadcast(String message);
+	
+	void removeHandler(ClientHandler client);
 
 }
