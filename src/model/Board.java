@@ -14,10 +14,13 @@ import tests.Game;
 public class Board {
     private HashMap<Position, Mark> playedMarks;
     private Set<Position> availablePositions;
+    //@invariant zAxis > 1;
     private int zAxis;
+    //@invariant boardLength >= 4 && boardLength <= 9;
     private int boardLength;
     
     //Testing purposes
+    //@requires boardLength >4 && boardLength <= 9;
     public Board(int boardLength) {
     	this.boardLength = boardLength;
         playedMarks = new HashMap<Position, Mark>();
@@ -26,18 +29,25 @@ public class Board {
         zAxis = 1;
     }
 
+    //@pure
     public int getBoardLength() {
     	return boardLength;
     }
     
+    //@pure
     public HashMap<Position, Mark> getPlayedMarks() {
         return playedMarks;
     }
 
+    //@pure
     public Set<Position> getAvailablePositions() {
         return availablePositions;
     }
     
+    //@requires mark.getPosition().getX() != null;
+    //@requires mark.getPosition().getY() != null;
+    //@requires mark.getPosition().getZ() != null;
+    //@ensures getAvailable
     public void setMark(Mark mark) {
         int x = mark.getPosition().getX();
         int y = mark.getPosition().getY();
@@ -63,6 +73,8 @@ public class Board {
     	return b;
     }
     
+    //@ensures getPlayedMarks().size() == 0;
+    //		&& getAvailablePositions().size() == getBoardLength() * getBoardLength();
     public void reset() {
     	playedMarks.clear();
     	availablePositions.clear();
