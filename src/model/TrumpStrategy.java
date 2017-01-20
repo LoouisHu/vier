@@ -27,8 +27,8 @@ public class TrumpStrategy implements Strategy {
 				mark = new Mark(m.getChar(), new Position(p.getX(), p.getY(), p.getZ())); 
 			}
 			i++;
-		}
-
+		} 
+		
 		return mark;
 	}
 

@@ -75,6 +75,7 @@ public class Board {
         }
     }
     
+    
     public int getHighestZ() {
     	HashSet<Integer> zposes = new HashSet<Integer>();
     	
@@ -453,15 +454,13 @@ public class Board {
     	
     }
     
+    public boolean greaterThanFour(Mark m) {
+    	return m.getPosition().getZ() > 4;
+    }
+    
     
     public boolean gameOver(Player p) {
-    	boolean result = false;
-    	
-	    if (hasDiagonalFour(p.getMark()) || hasFour(p.getMark())) {
-	    	result = true;
-	    }
-
-    	return result;
+    	return hasDiagonalFour(p.getMark()) || hasFour(p.getMark());
     }
     
     public String toString() {

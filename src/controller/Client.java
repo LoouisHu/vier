@@ -1,6 +1,5 @@
 package controller;
 
-import org.json.*;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -9,37 +8,30 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.Arrays;
+import java.util.List;
 
-import model.Player;
+import model.Board;
 
-public class Client implements Runnable {
+
+public class Client  {
 	
 	private String clientName;
 	private Socket socket;
 	private BufferedReader in;
 	private BufferedWriter out;
-	private Player player;
+	private Board board;
+	private List<Integer> exts;
 	
 	public Client() throws IOException {
-		socket = new Socket(InetAddress.getLocalHost(), 8080);
-		
+		socket = new Socket(InetAddress.getLocalHost(), 25565);
 		try {
 			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 		} catch (IOException e) {
 			System.out.print(e.getMessage());
 		}
-	}
-	
-	public void connect() {
-		JSONObject obj = new JSONObject();
-	}
-	
-	@Override
-	public void run() {
-		while (true) {
-			receiveMessage();
-		}
+		board = new Board(4);
 	}
 	
 	public void receiveMessage() {
@@ -78,95 +70,106 @@ public class Client implements Runnable {
 			      || split[0] == "LEADERBOARD") {
 			command = command + " " + split[1];
 		}
+		split = Arrays.copyOfRange(split, 1, split.length);
 		
 		switch (command) {
 			case Protocol.CONFIRM:
-				handleConfirm(command);
+				handleConfirm(split);
 				break;
 			case Protocol.GAME_START:
-				handleGameStart(command);
+				handleGameStart(split);
 				break;
 			case Protocol.GAME_MOVE:
-				handleGameMove(command);
+				handleGameMove(split);
 				break;
 			case Protocol.GAME_END: 
-				handleGameUnready(command);
+				handleGameUnready(split);
 				break;
 			case Protocol.PLAYERS: 
-				handlePlayers(command);
+				handlePlayers(split);
 				break;
 			case Protocol.CHALLENGE_REQUEST:
-				handleChallengeRequest(command);
+				handleChallengeRequest(split);
 				break;
 			case Protocol.CHALLENGE_DENY:
-				handleChallengeDeny(command);
+				handleChallengeDeny(split);
 				break;
 			case Protocol.CHAT_MESSAGE:
-				handleChatMessage(command);
+				handleChatMessage(split);
 				break;
 			case Protocol.CHAT_USER:
-				handleChatUser(command);
+				handleChatUser(split);
 				break;
 			case Protocol.LEADERBOARD_LIST:
-				handleLeaderboardList(command);
+				handleLeaderboardList(split);
 				break;
 			case Protocol.ERROR: 
-				handleError(command);
+				handleError(split);
 				break;
 		}
 	}
 
-	private void handleConfirm(String command) {
+	private void handleConfirm(String[] command) {
+		if (command[0] == "") {
+			return;
+		}
+		System.out.println("This server supports " + command[0]);
+		if (command[0].contains("0")) {
+			exts.add(0);
+		}
+		if (command[0].contains("1")) {
+			exts.add(1);
+		}
+		if (command[0].contains("2")) {
+			exts.add(2);
+		}
+		
+	}
+
+	private void handleGameStart(String[] command) {
+		
+	}
+
+	private void handleGameMove(String[] command) {
+		
+	}
+
+	private void handleGameUnready(String[] command) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	private void handleGameStart(String command) {
+	private void handlePlayers(String[] command) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	private void handleGameMove(String command) {
+	private void handleChallengeRequest(String[] command) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	private void handleGameUnready(String command) {
+	private void handleChallengeDeny(String[] command) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	private void handlePlayers(String command) {
+	private void handleChatMessage(String[] command) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	private void handleChallengeRequest(String command) {
+	private void handleChatUser(String[] command) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	private void handleChallengeDeny(String command) {
+	private void handleLeaderboardList(String[] command) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	private void handleChatMessage(String command) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	private void handleChatUser(String command) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	private void handleLeaderboardList(String command) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	private void handleError(String command) {
+	private void handleError(String[] command) {
 		// TODO Auto-generated method stub
 		
 	}
