@@ -7,11 +7,11 @@ import java.util.Scanner;
 import exceptions.IllegalIntegerException;
 import exceptions.IllegalStringException;
 import model.Board;
-import model.Game;
 import model.HumanPlayer;
 import model.Position;
 import model.Strategy;
 import model.TrumpStrategy;
+import tests.Game;
 
 
 public class TUI {

@@ -1,5 +1,7 @@
 package model;
 
+import tests.Game;
+
 public class MirandaGame {
 	
 	Game game;

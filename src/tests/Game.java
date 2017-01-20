@@ -1,4 +1,4 @@
-package model;
+package tests;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,10 +6,17 @@ import java.util.List;
 import controller.MirandaClient;
 import exceptions.IllegalIntegerException;
 import exceptions.IllegalStringException;
+import model.Board;
+import model.ComputerPlayer;
+import model.HumanPlayer;
+import model.Mark;
+import model.Player;
+import model.Strategy;
 import view.TUI;
 
 /**
  * Created by Glorious Louis on 14/11/2016.
+ * This is actually a controller, but this is for testing purposes.
  */
 public class Game extends Thread {
     private ArrayList<Player> players;

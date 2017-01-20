@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import tests.Game;
+
 /**
  * Created by Glorious Louis on 14/11/2016.
  */
@@ -452,6 +454,12 @@ public class Board {
     	
     	return result;
     	
+    }
+    
+    public boolean hasDraw(Mark m) {
+    	boolean result = false;
+    	
+    	return result;
     }
     
     public boolean greaterThanFour(Mark m) {
