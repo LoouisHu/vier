@@ -69,8 +69,10 @@ public class Client  {
 		if (split[0] == "GAME" || split[0] == "CHALLENGE" || split[0] == "CHAT" 
 			      || split[0] == "LEADERBOARD") {
 			command = command + " " + split[1];
+			split = Arrays.copyOfRange(split, 2, split.length);
+		} else {
+			split = Arrays.copyOfRange(split, 1, split.length);
 		}
-		split = Arrays.copyOfRange(split, 1, split.length);
 		
 		switch (command) {
 			case Protocol.CONFIRM:

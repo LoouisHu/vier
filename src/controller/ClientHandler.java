@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.util.Arrays;
 
 public class ClientHandler implements Runnable {
 	
@@ -60,113 +61,116 @@ public class ClientHandler implements Runnable {
 		if (command == "GAME" || command == "CHALLENGE" || command == "CHAT"
 				  || command == "LEADERBOARD") {
 			command = command + " " + split[1];
+			split = Arrays.copyOfRange(split, 2, split.length);
+		} else {
+			split = Arrays.copyOfRange(split, 1, split.length);
 		}
 		
 		switch (command) {
 			case Protocol.CONNECT:
-				handleConnect(command);
+				handleConnect(split);
 				break;
 			case Protocol.DISCONNECT:
-				handleDisconnect(command);
+				handleDisconnect(split);
 				break;
 			case Protocol.GAME_READY:
-				handleGameReady(command);
+				handleGameReady(split);
 				break;
 			case Protocol.GAME_UNREADY:
-				handleGameUnready(command);
+				handleGameUnready(split);
 				break;
 			case Protocol.GAME_MOVE:
-				handleGameMove(command);
+				handleGameMove(split);
 				break;
 			case Protocol.PLAYERS:
-				handlePlayers(command);
+				handlePlayers(split);
 				break;
 			case Protocol.CHALLENGE_REQUEST:
-				handleChallengeRequest(command);
+				handleChallengeRequest(split);
 				break;
 			case Protocol.CHALLENGE_DENY:
-				handleChallengeDeny(command);
+				handleChallengeDeny(split);
 				break;
 			case Protocol.CHAT_MESSAGE:
-				handleChatMessage(command);
+				handleChatMessage(split);
 				break;
 			case Protocol.CHAT_USER:
-				handleChatUser(command);
+				handleChatUser(split);
 				break;
 			case Protocol.LEADERBOARD_ALL:
-				handleLeaderboardAll(command);
+				handleLeaderboardAll(split);
 				break;
 			case Protocol.LEADERBOARD_USER:
-				handleLeaderboardUser(command);
+				handleLeaderboardUser(split);
 				break;
 			case Protocol.ERROR:
-				handleError(command);
+				handleError(split);
 				break;
 		}
 		
 	}
 
-	private void handleConnect(String command) {
+	private void handleConnect(String[] command) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	private void handleDisconnect(String command) {
+	private void handleDisconnect(String[] command) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	private void handleGameReady(String command) {
+	private void handleGameReady(String[] command) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	private void handleGameUnready(String command) {
+	private void handleGameUnready(String[] command) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	private void handleGameMove(String command) {
+	private void handleGameMove(String[] command) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	private void handlePlayers(String command) {
+	private void handlePlayers(String[] command) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	private void handleChallengeRequest(String command) {
+	private void handleChallengeRequest(String[] command) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	private void handleChallengeDeny(String command) {
+	private void handleChallengeDeny(String[] command) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	private void handleChatMessage(String command) {
+	private void handleChatMessage(String[] command) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	private void handleChatUser(String command) {
+	private void handleChatUser(String[] command) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	private void handleLeaderboardAll(String command) {
+	private void handleLeaderboardAll(String[] command) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	private void handleLeaderboardUser(String command) {
+	private void handleLeaderboardUser(String[] command) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	private void handleError(String command) {
+	private void handleError(String[] command) {
 		// TODO Auto-generated method stub
 		
 	}
