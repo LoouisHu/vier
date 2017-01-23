@@ -53,14 +53,6 @@ public class Game extends Thread {
     	current = 0;
     }
     
-    public Game(MirandaClient client) {
-    	tui = new TUI();
-    	board = new Board(4);
-    	Player louis = new HumanPlayer("Louis", new Mark('a'));
-    	players.add(louis);
-    	
-    }
-    
     public void start() {
     	boolean running = true;
     	while (running) {
