@@ -3,7 +3,6 @@ package tests;
 import java.util.ArrayList;
 import java.util.List;
 
-import controller.MirandaClient;
 import exceptions.IllegalIntegerException;
 import exceptions.IllegalStringException;
 import model.Board;

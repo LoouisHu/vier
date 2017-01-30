@@ -481,20 +481,17 @@ public class Board {
     			}
 			}
     	}
- 
-    
-    	
+		
     	return result;
-    	
     }
     
-    public boolean hasDraw(Mark m) {
+    public boolean hasDraw() {
     	boolean result = false;
     	
     	int counter = 0;
     	
     	for (Position p : availablePositions) {
-    		if (p.getZ() > 4) {
+    		if (getHighestZfromXY(p.getX(), p.getY()) == 4) {
     			counter++;
     		}
     	}
@@ -556,9 +553,5 @@ public class Board {
     	
     	return result.toString();
     }
-    
-    public static void main(String[] args) {
 
-    	
-    }
 }
