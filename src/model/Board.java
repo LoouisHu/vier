@@ -18,6 +18,9 @@ public class Board {
     private int zAxis;
     //@invariant boardLength >= 4 && boardLength <= 9;
     private int boardLength;
+    //@invariant
+    private int aiThinkTime;
+    private int aiTimeLeft;
     
     //Testing purposes
     //@requires boardLength >4 && boardLength <= 9;
@@ -27,6 +30,10 @@ public class Board {
         availablePositions = new HashSet<Position>();
         placeAvailablePositions();
         zAxis = 1;
+    }
+    
+    public int getAIThinkTime() {
+    	return aiThinkTime;
     }
 
     //@pure
@@ -66,7 +73,7 @@ public class Board {
         zAxis = getHighestZ();
     }
     
-    public Board deepCopy(Game g) {
+    public Board deepCopy() {
     	Board b = new Board(boardLength);
     	b.availablePositions = this.getAvailablePositions();
     	b.playedMarks = this.getPlayedMarks();
