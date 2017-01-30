@@ -7,19 +7,27 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
@@ -32,17 +40,16 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import model.Player;
 
 public class LobbyController implements Initializable {
 	@FXML private AnchorPane anchorPane;
 	@FXML private ListView<String> listUsers;
 	@FXML private TextField messageBox;
-	@FXML private Text usernameText;
+	@FXML private Label usernameText;
 	@FXML private ListView<HBox> chatView;
-	
-	private double xOffset;
-	private double yOffset;
+	@FXML private ScrollPane scrollPane;
 	
 	public void setUsersList(List<String> users) {
 		List<String> players = new ArrayList<>();
@@ -80,26 +87,18 @@ public class LobbyController implements Initializable {
 		});
 	}
 	
-	public void pressEnter(KeyEvent event) throws IOException {
-		if (event.getCode() == KeyCode.ENTER) {
-			String msg = messageBox.getText();
-			if (!msg.isEmpty()) {
-				
-				String[] split = msg.split("\\s+");
-				
-				if (msg.startsWith("/w")) {
-					String player = split[1];
-					String parsedMessage = Arrays.copyOfRange(split, 2, split.length).toString();
-					//TODO send message to specific player
-					addToChatView(usernameText.getText(), parsedMessage);
-					messageBox.clear();
-				} else {
-					//TODO broadcast message to all players
-					addToChatView(usernameText.getText(), msg);
-					messageBox.clear();
-				}
-			}
-		}
+	@FXML
+	public void beginGame() throws IOException {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ConnectFour.fxml"));
+		Parent window = (Parent) loader.load();
+		
+		//Passing parameters between scenes
+		ConnectFourController controller = loader.<ConnectFourController>getController();
+
+		Stage stage = new Stage();
+		stage.setTitle("Connect Four 3D - Game");
+		stage.setScene(new Scene(window));
+		stage.show();
 	}
 	
 	public synchronized void addToChatView(String playerName, String msg) {
@@ -130,7 +129,7 @@ public class LobbyController implements Initializable {
 			@Override
 			protected HBox call() throws Exception {
 				Label l = new Label();
-				l.setText(usernameText + ": " + msg);
+				l.setText(usernameText.getText() + ": " + msg);
 				HBox x = new HBox();
 				x.getChildren().add(l);
 				return x;
@@ -164,7 +163,35 @@ public class LobbyController implements Initializable {
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		
+		messageBox.setOnKeyPressed(new EventHandler<KeyEvent>() {
+			@Override
+			public void handle(KeyEvent event) {
+				if (event.getCode().equals(KeyCode.ENTER)) {
+					String msg = messageBox.getText();
+					if (!msg.isEmpty()) {
+						
+//						String[] split = msg.split("\\s+");
+//						
+//						if (msg.startsWith("/w")) {
+//							String player = split[1];
+//							String parsedMessage = Arrays.copyOfRange(split, 2, split.length).toString();
+//							//TODO send message to specific player
+//							addToChatView(usernameText.getText(), parsedMessage);
+//							messageBox.clear();
+//						} else {
+//							//TODO broadcast message to all players
+//							addToChatView(usernameText.getText(), msg);
+//							messageBox.clear();
+//						}
+						
+						addToChatView(usernameText.getText(), msg);
+						chatView.scrollTo(chatView.getItems().size() - 1);
+						messageBox.clear();	
+					}
+				}
+			}
+		});
+		chatView.getItems().add(new HBox(new Label("Hey, welcome!")));
 	}
 
 }

@@ -7,7 +7,7 @@ public class LocalGame {
 
 	//Testing purposes
     public static void main(String[] args) throws IllegalIntegerException, IllegalStringException {
-        Game g = new Game();
+        LocalGameClass g = new LocalGameClass();
         g.start();
     }
 }

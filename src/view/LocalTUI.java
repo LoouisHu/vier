@@ -11,14 +11,14 @@ import model.HumanPlayer;
 import model.Position;
 import model.Strategy;
 import model.TrumpStrategy;
-import tests.Game;
+import tests.LocalGameClass;
 
 
-public class TUI {
+public class LocalTUI {
 	
 	Scanner sc;
 	
-	public TUI() {
+	public LocalTUI() {
 		sc = new Scanner(System.in);
 	}
 
@@ -34,7 +34,7 @@ public class TUI {
 		return players;
 	}
 	
-	public int askHowManyComputerPlayers(Game g) throws IllegalIntegerException {
+	public int askHowManyComputerPlayers(LocalGameClass g) throws IllegalIntegerException {
 		int players = -1;
 		System.out.print("Enter amount of Computer Players: ");
 		players = sc.nextInt();
@@ -67,7 +67,7 @@ public class TUI {
 		return p;
 	}
 	
-	public ArrayList<String> askNames(Game g) throws IllegalStringException {
+	public ArrayList<String> askNames(LocalGameClass g) throws IllegalStringException {
 		ArrayList<String> names = new ArrayList<String>();
 		System.out.println("Set player names:");
 		
@@ -87,7 +87,7 @@ public class TUI {
 		return names;
 	}
 	
-	public ArrayList<Strategy> askStrategies(Game g) {
+	public ArrayList<Strategy> askStrategies(LocalGameClass g) {
 		ArrayList<Strategy> result = new ArrayList<Strategy>();
 		
 		for (int i = 0; i < g.getManyComputerPlayers(); i++) {

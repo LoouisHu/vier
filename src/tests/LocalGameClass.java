@@ -11,13 +11,13 @@ import model.HumanPlayer;
 import model.Mark;
 import model.Player;
 import model.Strategy;
-import view.TUI;
+import view.LocalTUI;
 
 /**
  * Created by Glorious Louis on 14/11/2016.
  * This is actually a controller, but this is for testing purposes.
  */
-public class Game extends Thread {
+public class LocalGameClass extends Thread {
     private ArrayList<Player> players;
     private Player player;
     private char[] alphabet = "abcdefghjiklmnopqrstuvwxyz".toCharArray();
@@ -25,11 +25,11 @@ public class Game extends Thread {
     private int current;
     private int manyPlayers;
     private int manyComputerPlayers;
-    private TUI tui;
+    private LocalTUI tui;
     private int usedChars;
  
-    public Game() throws IllegalIntegerException, IllegalStringException {
-    	tui = new TUI();
+    public LocalGameClass() throws IllegalIntegerException, IllegalStringException {
+    	tui = new LocalTUI();
     	board = new Board(tui.askBoardSize());
     	manyPlayers = tui.askHowManyPlayers();
     	manyComputerPlayers = tui.askHowManyComputerPlayers(this);

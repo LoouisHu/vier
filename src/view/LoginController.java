@@ -43,7 +43,7 @@ public class LoginController implements Initializable {
 		
 		if (!username.isEmpty() && !host.isEmpty()) {
 		
-			//TODO Parse into server, together with Jelle
+			//TODO Send port and host
 			
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Lobby.fxml"));
 			Parent window = (Parent) loader.load();

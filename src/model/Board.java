@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import tests.Game;
+import tests.LocalGameClass;
 
 /**
  * Created by Glorious Louis on 14/11/2016.
@@ -14,11 +14,8 @@ import tests.Game;
 public class Board {
     private HashMap<Position, Mark> playedMarks;
     private Set<Position> availablePositions;
-    //@invariant zAxis > 1;
     private int zAxis;
-    //@invariant boardLength >= 4 && boardLength <= 9;
     private int boardLength;
-    //@invariant
     private int aiThinkTime;
     private int aiTimeLeft;
     
@@ -51,10 +48,10 @@ public class Board {
         return availablePositions;
     }
     
-    //@requires mark.getPosition().getX() != null;
-    //@requires mark.getPosition().getY() != null;
-    //@requires mark.getPosition().getZ() != null;
-    //@ensures getAvailable
+    //@requires mark.getPosition().getX() != 0;
+    //@requires mark.getPosition().getY() != 0;
+    //@requires mark.getPosition().getZ() != 0;
+    //@ensures getAvailablePositions();
     public void setMark(Mark mark) {
         int x = mark.getPosition().getX();
         int y = mark.getPosition().getY();
@@ -141,10 +138,10 @@ public class Board {
     //@ensures (\forall Position p; result.keySet().contains(p));
     //@ensures (\exist z == p.getZ());
     public HashMap<Position, Mark> getFloor(int z) {
-    	HashMap<Position, Mark> result = playedMarks;
-    	for (Position p : result.keySet()) {
+    	HashMap<Position, Mark> result = new HashMap<Position, Mark>();
+    	for (Position p : playedMarks.keySet()) {
     		if (p.getZ() == z) {
-    			result.put(p, result.get(p));
+    			result.put(p, playedMarks.get(p));
     		}
     	}
     	return result;

@@ -7,11 +7,13 @@ public class IllegalIntegerException extends Exception {
 	
 	public IllegalIntegerException(int number) {
 		this.number = number;
+		System.out.println("Illegal integer: " + number);
+		System.exit(0);
 	}
 	
-	@Override
-	public String getMessage() {
-		return "This is an illegal integer: " + number;
-	}
+//	@Override
+//	public String getMessage() {
+//		return "This is an illegal integer: " + number;
+//	}
 	
 }
