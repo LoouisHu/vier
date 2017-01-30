@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import tests.Game;
+import tests.LocalGameClass;
 
 /**
  * Created by Glorious Louis on 14/11/2016.
@@ -66,7 +66,7 @@ public class Board {
         zAxis = getHighestZ();
     }
     
-    public Board deepCopy(Game g) {
+    public Board deepCopy(LocalGameClass g) {
     	Board b = new Board(boardLength);
     	b.availablePositions = this.getAvailablePositions();
     	b.playedMarks = this.getPlayedMarks();
@@ -488,7 +488,7 @@ public class Board {
     	
     }
     
-    public boolean hasDraw(Mark m) {
+    public boolean hasDraw() {
     	boolean result = false;
     	
     	int counter = 0;

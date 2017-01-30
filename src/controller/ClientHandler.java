@@ -1,5 +1,7 @@
 package controller;
 
+import model.Player;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -7,18 +9,22 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.Arrays;
+import java.util.Objects;
 
-public class ClientHandler implements Runnable {
+public class ClientHandler extends Thread {
 	
 	private Server server;
 	private Socket socket;
 	private BufferedReader in;
 	private BufferedWriter out;
-	
+	private String name;
+	private PlayGame game;
+	private Player myPlayer;
+
 	public ClientHandler(Server server, Socket socket) {
 		this.server = server;
 		this.socket = socket;
-		
+
 		try {
 			in = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
 			out = new BufferedWriter(new OutputStreamWriter(this.socket.getOutputStream()));
@@ -36,34 +42,51 @@ public class ClientHandler implements Runnable {
 				if (message != null) {
 					handleMessage(message);
 				} else {
-					shutdown();
+					shutdown("Received empty string");
 					break;
 				}
 			} catch (IOException e) {
+				shutdown("DEBUG: ");
 				e.printStackTrace();
-				shutdown();
 				break;
 			}
 		}
 	}
-	
-	
+
+	public void setGame(PlayGame game) {
+		this.game = game;
+	}
+
+	public Player getMyPlayer() {
+		return myPlayer;
+	}
+
+	public void setMyPlayer(Player myPlayer) {
+		this.myPlayer = myPlayer;
+	}
+
 	/**
 	 * Listen to incoming messages from client and parse them.
 	 * 
 	 * @param message
 	 */
 	public void handleMessage(String message) {
-		String[] split = message.split("\\s+");
-		
-		String command = split[0];
-		
-		if (command == "GAME" || command == "CHALLENGE" || command == "CHAT"
-				  || command == "LEADERBOARD") {
-			command = command + " " + split[1];
-			split = Arrays.copyOfRange(split, 2, split.length);
+		System.out.println("I just received a message");
+		if (message.length() < 1) {
+			return;
+		}
+		String[] split;
+		if (message.contains(" ")) {
+			split = message.split(" ");
 		} else {
-			split = Arrays.copyOfRange(split, 1, split.length);
+			split = new String[1];
+			split[0] = message;
+		}
+
+		String command = split[0];
+		if (Objects.equals(split[0], "GAME") || Objects.equals(split[0], "CHALLENGE") || Objects.equals(split[0], "CHAT")
+				|| Objects.equals(split[0], "LEADERBOARD")) {
+			command = command + " " + split[1];
 		}
 		
 		switch (command) {
@@ -111,33 +134,37 @@ public class ClientHandler implements Runnable {
 	}
 
 	private void handleConnect(String[] command) {
-		// TODO Auto-generated method stub
-		
+		if (server.setName(this, command[1])) {
+			server.addPlayer(command[1]);
+			this.name = command[1];
+			sendMessage(Protocol.CONFIRM + " " + server.getMYEXTS());
+		} else sendMessage(Protocol.ERROR + 190);
 	}
 
 	private void handleDisconnect(String[] command) {
-		// TODO Auto-generated method stub
-		
+		shutdown("Remote side sent disconnect command.");
 	}
 
 	private void handleGameReady(String[] command) {
-		// TODO Auto-generated method stub
-		
+		System.out.println("test");
+		server.updateReady(name, true);
 	}
 
 	private void handleGameUnready(String[] command) {
-		// TODO Auto-generated method stub
-		
+		server.updateReady(name, false);
 	}
 
 	private void handleGameMove(String[] command) {
-		// TODO Auto-generated method stub
+		game.handleMove(command, getMyPlayer());
 		
 	}
 
 	private void handlePlayers(String[] command) {
-		// TODO Auto-generated method stub
-		
+		String res = Protocol.PLAYERS;
+		for (String string : server.getPlayers()) {
+			res += " " + string;
+		}
+		sendMessage(res);
 	}
 
 	private void handleChallengeRequest(String[] command) {
@@ -171,26 +198,29 @@ public class ClientHandler implements Runnable {
 	}
 
 	private void handleError(String[] command) {
-		// TODO Auto-generated method stub
+		System.out.println(command);
 		
 	}
 
-	private void sendMessage(String message) {
+	public void sendMessage(String message) {
 		try {
 			out.write(message);
 			out.newLine();
 			out.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
-			shutdown();
+			shutdown("Could not send message.");
 		}
 	}
 	
-	public void shutdown() {
+	public void shutdown(String message) {
+		System.out.println("Disconnect: ");
+		System.out.println(message);
 		try {
 			in.close();
 			out.close();
 			socket.close();
+			server.removeHandler(this);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

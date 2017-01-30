@@ -1,24 +1,24 @@
 package model;
 
 import exceptions.IllegalIntegerException;
-import view.TUI;
+import view.LocalTUI;
 
 /**
  * Created by Glorious Louis on 14/11/2016.
  */
 public class HumanPlayer extends Player {
 
-	private TUI tui;
+	private LocalTUI localTui;
 	
 	public HumanPlayer(String playerName, Mark playerMark) {
 		super(playerName, playerMark);
-		tui = new TUI();
+		localTui = new LocalTUI();
 	}
 
 	public Mark determineMove(Board board) {
 		Position pAsk = new Position(0, 0);
 		try {
-			pAsk = tui.askPosition(this, board);
+			pAsk = localTui.askPosition(this, board);
 		} catch (IllegalIntegerException e) {
 			e.getMessage();
 		}
