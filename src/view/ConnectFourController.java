@@ -38,6 +38,12 @@ public class ConnectFourController implements Initializable {
 	@FXML private Rectangle square34;
 	@FXML private Rectangle square44;
 	
+	private Board board;
+	
+	public ConnectFourController(Board b) {
+		this.board = b;
+	}
+	
 	public void updateFloor(Board board) {
 		Map<Position, Mark> boardFloor = board.getFloor(Integer.parseInt(currentFloor.getText()));
 		for (Position p : boardFloor.keySet()) {
@@ -97,6 +103,7 @@ public class ConnectFourController implements Initializable {
 		if (floor < 4) {
 			floor++;	
 			currentFloor.setText(Integer.toString(floor));
+			updateFloor(board);
 		}
 		
 	}
@@ -107,6 +114,7 @@ public class ConnectFourController implements Initializable {
 		if (floor > 1) {
 			floor--;
 			currentFloor.setText(Integer.toString(floor));
+			updateFloor(board);
 		}
 	}
 	
