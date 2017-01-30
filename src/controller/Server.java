@@ -13,7 +13,7 @@ public class Server implements Runnable {
 		try {
 			ServerSocket socket = new ServerSocket(port);
 			
-			while(clients.size() < 1) {
+			while (clients.size() < 1) {
 				
 			}
 		} catch (IOException e) {
