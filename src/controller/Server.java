@@ -2,6 +2,7 @@ package controller;
 
 import model.Mark;
 import model.RemotePlayer;
+import view.LocalTUI;
 import view.TUI;
 
 import java.io.IOException;
@@ -13,7 +14,7 @@ import java.util.List;
 public class Server extends Thread {
 	
 	private static int port;
-	private List<ClientHandler> clients;
+	private static List<ClientHandler> clients;
 	private TUI myTUI;
 	private static Server server;
 	private final String MYEXTS = "";
@@ -23,6 +24,7 @@ public class Server extends Thread {
 	private static ArrayList<PlayGame> games;
 
 	public static void main(String[] args) {
+		clients = new ArrayList<>();
 		players = new ArrayList<>();
 		readyPlayers = new ArrayList<>();
 		games = new ArrayList<>();
