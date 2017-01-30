@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+
+<AnchorPane prefHeight="586.0" prefWidth="788.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.LobbyController">
+   <children>
+      <TextField fx:id="messageBox" layoutX="14.0" layoutY="550.0" prefHeight="25.0" prefWidth="500.0" />
+      <MenuBar prefHeight="25.0" prefWidth="788.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="Connect">
+            <items>
+              <MenuItem mnemonicParsing="false" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Game">
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#beginGame" text="Debug Game" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <Pane layoutX="532.0" layoutY="36.0" prefHeight="501.0" prefWidth="243.0">
+         <children>
+            <ListView fx:id="listUsers" layoutX="-2.0" prefHeight="501.0" prefWidth="244.0" />
+         </children>
+      </Pane>
+      <ScrollPane fx:id="scrollPane" hbarPolicy="NEVER" layoutX="14.0" layoutY="36.0" prefHeight="501.0" prefWidth="500.0">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="499.0" prefWidth="499.0">
+               <children>
+                  <ListView fx:id="chatView" prefHeight="501.0" prefWidth="500.0" />
+               </children>
+            </AnchorPane>
+        </content>
+      </ScrollPane>
+      <Label fx:id="usernameText" layoutX="532.0" layoutY="554.0" />
+   </children>
+</AnchorPane>

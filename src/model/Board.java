@@ -14,10 +14,10 @@ import tests.LocalGameClass;
 public class Board {
     private HashMap<Position, Mark> playedMarks;
     private Set<Position> availablePositions;
-    //@invariant zAxis > 1;
     private int zAxis;
-    //@invariant boardLength >= 4 && boardLength <= 9;
     private int boardLength;
+    private int aiThinkTime;
+    private int aiTimeLeft;
     
     //Testing purposes
     //@requires boardLength >4 && boardLength <= 9;
@@ -27,6 +27,10 @@ public class Board {
         availablePositions = new HashSet<Position>();
         placeAvailablePositions();
         zAxis = 1;
+    }
+    
+    public int getAIThinkTime() {
+    	return aiThinkTime;
     }
 
     //@pure
@@ -44,10 +48,10 @@ public class Board {
         return availablePositions;
     }
     
-    //@requires mark.getPosition().getX() != null;
-    //@requires mark.getPosition().getY() != null;
-    //@requires mark.getPosition().getZ() != null;
-    //@ensures getAvailable
+    //@requires mark.getPosition().getX() != 0;
+    //@requires mark.getPosition().getY() != 0;
+    //@requires mark.getPosition().getZ() != 0;
+    //@ensures getAvailablePositions();
     public void setMark(Mark mark) {
         int x = mark.getPosition().getX();
         int y = mark.getPosition().getY();
@@ -66,7 +70,7 @@ public class Board {
         zAxis = getHighestZ();
     }
     
-    public Board deepCopy(LocalGameClass g) {
+    public Board deepCopy() {
     	Board b = new Board(boardLength);
     	b.availablePositions = this.getAvailablePositions();
     	b.playedMarks = this.getPlayedMarks();
@@ -134,10 +138,10 @@ public class Board {
     //@ensures (\forall Position p; result.keySet().contains(p));
     //@ensures (\exist z == p.getZ());
     public HashMap<Position, Mark> getFloor(int z) {
-    	HashMap<Position, Mark> result = playedMarks;
-    	for (Position p : result.keySet()) {
+    	HashMap<Position, Mark> result = new HashMap<Position, Mark>();
+    	for (Position p : playedMarks.keySet()) {
     		if (p.getZ() == z) {
-    			result.put(p, result.get(p));
+    			result.put(p, playedMarks.get(p));
     		}
     	}
     	return result;
@@ -481,11 +485,8 @@ public class Board {
     			}
 			}
     	}
- 
-    
-    	
+		
     	return result;
-    	
     }
     
     public boolean hasDraw() {
@@ -494,7 +495,7 @@ public class Board {
     	int counter = 0;
     	
     	for (Position p : availablePositions) {
-    		if (p.getZ() > 4) {
+    		if (getHighestZfromXY(p.getX(), p.getY()) == 4) {
     			counter++;
     		}
     	}
@@ -556,9 +557,5 @@ public class Board {
     	
     	return result.toString();
     }
-    
-    public static void main(String[] args) {
 
-    	
-    }
 }
