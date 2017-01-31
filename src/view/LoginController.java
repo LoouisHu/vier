@@ -7,9 +7,12 @@ import java.util.List;
 import java.util.Random;
 import java.util.ResourceBundle;
 
+import controller.Client;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -21,6 +24,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import model.Player;
 
@@ -31,9 +35,10 @@ public class LoginController implements Initializable {
 	@FXML private TextField portTextField;
 	@FXML private AnchorPane anchorPane;
 	
-	private Scene scene;
 	private double xOffset;
 	private double yOffset;
+	private Client client;
+	
 	
 	public void loginButtonAction() throws IOException {
 		
@@ -56,11 +61,22 @@ public class LoginController implements Initializable {
 			Stage stage = new Stage();
 			stage.setTitle("Connect Four 3D - Lobby");
 			stage.setScene(new Scene(window));
+			stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+				@Override
+				public void handle(WindowEvent event) {
+					//TODO Send DISCONNECT to server
+					Platform.exit();
+				}
+			});
 			stage.show();
 			MainLauncher.getPrimaryStage().close();
 			
 		}
 		
+	}
+	
+	public void setClient(Client client) {
+		this.client = client;
 	}
 	
 	@Override

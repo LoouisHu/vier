@@ -26,6 +26,7 @@ public class ConnectFourController implements Initializable {
 
 	@FXML private TextField messageBox;
 	@FXML private ListView<HBox> chatView;
+	@FXML private Label username;
 	@FXML private Label currentFloor;
 	@FXML private Rectangle square11;
 	@FXML private Rectangle square21;
@@ -43,13 +44,8 @@ public class ConnectFourController implements Initializable {
 	@FXML private Rectangle square24;
 	@FXML private Rectangle square34;
 	@FXML private Rectangle square44;
-	private Label usernameLabel;
 	
 	private Board board;
-	
-	public ConnectFourController(Board b) {
-		this.board = b;
-	}
 	
 	public void updateFloor(Board aBoard) {
 		Map<Position, Mark> boardFloor = aBoard.getFloor(Integer.parseInt(currentFloor.getText()));
@@ -91,6 +87,10 @@ public class ConnectFourController implements Initializable {
 				square44 = chooseColour(square41, mark);
 			}
 		}
+	}
+	
+	public void setBoard(Board board) {
+		this.board = board;
 	}
 	
 	private Rectangle chooseColour(Rectangle r, Mark m) {
@@ -153,7 +153,7 @@ public class ConnectFourController implements Initializable {
 			@Override
 			protected HBox call() throws Exception {
 				Label l = new Label();
-				l.setText(usernameLabel.getText() + ": " + msg);
+				l.setText(username.getText() + ": " + msg);
 				HBox x = new HBox();
 				x.getChildren().add(l);
 				return x;
@@ -164,7 +164,7 @@ public class ConnectFourController implements Initializable {
 			chatView.getItems().add(ownMessages.getValue());
 		});
 		
-		if (!(playerName == usernameLabel.getText())) {
+		if (!(playerName == username.getText())) {
 			Thread t = new Thread(otherMessages);
 			t.setDaemon(true);
 			t.start();
@@ -180,7 +180,7 @@ public class ConnectFourController implements Initializable {
 	}
 	
 	public void setUsername(String s) {
-		usernameLabel.setText(s);
+		username.setText(s);
 	}
 	
 	@Override
@@ -207,7 +207,7 @@ public class ConnectFourController implements Initializable {
 //							messageBox.clear();
 //						}
 						
-						addToChatView(usernameLabel.getText(), msg);
+						addToChatView(username.getText(), msg);
 						chatView.scrollTo(chatView.getItems().size() - 1);
 						messageBox.clear();	
 					}
