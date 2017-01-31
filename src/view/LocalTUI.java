@@ -55,7 +55,6 @@ public class LocalTUI {
         x = sc.nextInt();
         System.out.print(player.getName() + ", what's your y? (1-" + board.getBoardLength() + "): ");
         y = sc.nextInt();
-        //TODO doesn't throw wtf?
         if (x < 1 || x > board.getBoardLength()) {
             throw new IllegalIntegerException(x);
         }

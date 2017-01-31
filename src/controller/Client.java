@@ -29,6 +29,7 @@ public class Client  {
 	private TUI myTUI;
 	private int myNumerInGame = 0;
 	private final String MYEXTS = "";
+	private static ClientInput clientInput;
 	private char[] alphabet = "abcdefghjiklmnopqrstuvwxyz".toCharArray();
 
 	public static void main(String[] args) {
@@ -43,6 +44,7 @@ public class Client  {
 	
 	public Client() throws IOException {
 		myTUI = new TUI();
+		clientInput = new ClientInput(this);
 		clientName = myTUI.askString("What username do you want to go by?");
 		System.out.println("Your name: " + clientName + ".");
 		String ipAddr = myTUI.askString("Please enter server IP address.");
@@ -53,14 +55,19 @@ public class Client  {
 			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 		} catch (IOException e) {
-			System.out.print(e.getMessage());
-			disconnect();
+			System.out.println("Something went wrong, please try again!");
 		}
 		sendMessage(Protocol.CONNECT + " " + clientName + " " + MYEXTS);
+		clientInput.start();
+	}
+
+	public TUI getMyTUI() {
+		return myTUI;
 	}
 
 	public void sendMessage(String message) {
 		try {
+			System.out.println("Sending message:" + message);
 			out.write(message);
 			out.newLine();
 			out.flush();
@@ -78,6 +85,7 @@ public class Client  {
 			in.close();
 			out.close();
 			socket.close();
+			System.exit(0);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -168,7 +176,7 @@ public class Client  {
 				handleGameEnd(split);
 			default:
 				System.out.println("An invalid command came in: " + command);
-				sendMessage(Protocol.ERROR + "010");
+				sendMessage(Protocol.ERROR + " " + "010");
 		}
 	}
 
@@ -187,8 +195,7 @@ public class Client  {
 				exts.add(2);
 			}
 		}
-		myTUI.askString("Please type anything when you are ready to play a game.");
-		sendMessage(Protocol.GAME_READY);
+		askReady();
 	}
 
 	private void handleGameStart(String[] command) {
@@ -203,26 +210,32 @@ public class Client  {
 			}
 			localPlayers.add(player);
 		}
-		//TODO: remove debug next line
-		System.out.println(localPlayers.toString());
 		game = new Game(localPlayers);
+		myTUI.updateGameState(game.getBoard());
 		Mark m;
 		if (command[2].equals(clientName)) {
 			m = game.getPlayers().get(myNumerInGame).determineMove(game.getBoard());
-			sendMessage(Protocol.GAME_MOVE + " " + m.getPosition().getX() + " " + m.getPosition().getY());
+			int localx = m.getPosition().getX();
+			int localy = m.getPosition().getY();
+			sendMessage(Protocol.GAME_MOVE + " " + --localx + " " + --localy);
 		}
 	}
 
 	private void handleGameMove(String[] command) {
 		int currentNr = playerNumberInGame(command[2]);
 		Player currentPlayer = game.getPlayers().get(currentNr);
-		Mark m = new Mark(currentPlayer.getMark().getChar(), new Position(Integer.parseInt(command[3]), Integer.parseInt(command[4]), 0));
+		int x = Integer.parseInt(command[3]);
+		int y = Integer.parseInt(command[4]);
+		x++;
+		y++;
+		Mark m = new Mark(currentPlayer.getMark().getChar(), new Position(x, y, game.getBoard().getHighestZfromXY(x, y)));
 		game.getBoard().setMark(m);
 		myTUI.updateGameState(game.getBoard());
-		if (!command[5].isEmpty() && command[5].equals(clientName)) {
+		if (!(command.length < 6) && command[5].equals(clientName)) {
 			m = game.getPlayers().get(myNumerInGame).determineMove(game.getBoard());
-			System.out.println(game.getPlayers().get(myNumerInGame).getClass());
-			sendMessage(Protocol.GAME_MOVE + " " + m.getPosition().getX() + " " + m.getPosition().getY());
+			int localx = m.getPosition().getX();
+			int localy = m.getPosition().getY();
+			sendMessage(Protocol.GAME_MOVE + " " + --localx + " " + --localy);
 		}
 	}
 
@@ -233,6 +246,7 @@ public class Client  {
 		else {
 			System.out.println(command[3] + " wins!");
 		}
+		askReady();
 	}
 
 	private void handlePlayers(String[] command) {
@@ -271,8 +285,67 @@ public class Client  {
 	private void handleError(String[] command) {
 		// TODO Auto-generated method stub
 		System.out.println(command);
+		if (command[1].equals("120")) {
+			myTUI.updateGameState(game.getBoard());
+			Mark m;
+			System.out.println("Your last move was not accepted by the server, please try a new move.");
+			m = game.getPlayers().get(myNumerInGame).determineMove(game.getBoard());
+			int localx = m.getPosition().getX();
+			int localy = m.getPosition().getY();
+			sendMessage(Protocol.GAME_MOVE + " " + --localx + " " + --localy);
+		}
+		if (command[1].equals("110")) {
+			System.out.println("A player disconnected, game ended in a draw.");
+			askReady();
+		}
+		if (command[1].equals("111")) {
+			System.out.println("Received error 111.");
+		}
+		if (command[1].equals("190")) {
+			System.out.println("Name already exists on server.");
+			clientName = myTUI.askString("What username do you want to go by?");
+			System.out.println("Your name: " + clientName + ".");
+			sendMessage(Protocol.CONNECT + " " + clientName + " " + MYEXTS);
+		}
 	}
-	
+
+	private void askReady() {
+		myTUI.askString("Please type anything when you are ready to play a game.");
+		sendMessage(Protocol.GAME_READY);
+	}
+
+
+	public void chat(String[] command) {
+		if (command.length > 1) {
+			if (command[1].equals("global")) {
+				String res = "";
+				for (int i = 2; i < command.length; i++) {
+					res += command[i];
+				}
+				sendMessage(Protocol.CHAT_MESSAGE + " GLOBAL " + res);
+			} else if (command[1].equals("private")) {
+				String res = "";
+				for (int i = 3; i < command.length; i++) {
+					res += command[i];
+				}
+				sendMessage(Protocol.CHAT_MESSAGE + " PRIVATE " + command[2] + " " + res);
+			} else if (command[1].equals("game")) {
+				String res = "";
+				for (int i = 2; i < command.length; i++) {
+					res += command[i];
+				}
+				sendMessage(Protocol.CHAT_MESSAGE + " GAME " + res);
+			}
+		}
+	}
+
+	public void players(String[] command) {
+		if((command.length > 1) && command[1].equals("chat")) {
+			sendMessage(Protocol.PLAYERS + " " + "ALL");
+		} else {
+			sendMessage(Protocol.PLAYERS + " " + 1);
+		}
+	}
 
 
 }

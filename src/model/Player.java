@@ -32,7 +32,12 @@ public abstract class Player {
 	public abstract Mark determineMove(Board board);
 	
 	public void makeMove(Board board) {
-		Mark chosenMark = determineMove(board);
+		Mark chosenMark = null;
+		try {
+			chosenMark = determineMove(board);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		board.setMark(chosenMark);
 	}
 

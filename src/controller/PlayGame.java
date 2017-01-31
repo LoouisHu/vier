@@ -44,35 +44,55 @@ public class PlayGame extends Thread {
     }
 
     public void handleMove(String[] command, Player player) {
-        int x = Integer.parseInt(command[2]);
-        int y = Integer.parseInt(command[3]);
-        if (!(x < 0 || x > 3 || y < 0 || y > 3)) {
-            y++;
-            x++;
-            Position result = new Position(x, y, board.getHighestZfromXY(x, y));
-            Mark m = new Mark(player.getMark().getChar(), result);
-            board.setMark(m);
-            if (board.gameOver(player)) {
-                sendToBoth(Protocol.GAME_MOVE + player + x + y);
-                sendToBoth(Protocol.GAME_END + "PLAYER" + player.getName());
-            } else if (board.hasDraw()) {
-                sendToBoth(Protocol.GAME_MOVE + player + x + y);
-                sendToBoth(Protocol.GAME_END + "DRAW");
-            } else {
-                String otherPlayer = ""; {
-                    for (Player curPlay : players) {
-                        if (!player.getName().equals(curPlay.getName())) {
-                            otherPlayer= curPlay.getName();
-                        }
-                    }
-                }
-                sendToBoth(Protocol.GAME_MOVE + player + x + y + otherPlayer);
-            }
-        }else {
+        if(command.length < 4) {
             if (handler1.getMyPlayer() == player) {
-                server.sendMessage(Protocol.ERROR + 120, handler1);
-            } else server.sendMessage(Protocol.ERROR + 120, handler2);
+                server.sendMessage(Protocol.ERROR + " " + 120, handler1);
+            } else server.sendMessage(Protocol.ERROR + " " + 120, handler2);
+        } else {
+            try {
+                int x = Integer.parseInt(command[2]);
+                int y = Integer.parseInt(command[3]);
+                System.out.println("x: " + x + " y: " + y + " " + player.getName());
+                if (!(x < 0 || x > 3 || y < 0 || y > 3 || (board.getHighestZfromXY(++x, ++y) > 3))) {
+                    Position result = new Position(x, y, board.getHighestZfromXY(x, y));
+                    System.out.println("z: " + result.getZ());
+                    Mark m = new Mark(player.getMark().getChar(), result);
+                    board.setMark(m);
+                    server.getMyTUI().updateGameState(board);
+                    if (board.gameOver(player)) {
+                        sendToBoth(Protocol.GAME_MOVE + " " + player.getName() + " " + --x + " " + --y);
+                        sendToBoth(Protocol.GAME_END + " " + "PLAYER" + " " + player.getName());
+                        endGame();
+                    } else if (board.hasDraw()) {
+                        sendToBoth(Protocol.GAME_MOVE + " " + player.getName() + " " + --x + " " + --y);
+                        sendToBoth(Protocol.GAME_END + " " + "DRAW");
+                        endGame();
+                    } else {
+                        String otherPlayer = "";
+                        {
+                            for (Player curPlay : players) {
+                                if (!player.getName().equals(curPlay.getName())) {
+                                    otherPlayer = curPlay.getName();
+                                }
+                            }
+                        }
+                        sendToBoth(Protocol.GAME_MOVE + " " + player.getName() + " " + --x + " " + --y + " " + otherPlayer);
+                    }
+                } else {
+                    if (handler1.getMyPlayer() == player) {
+                        server.sendMessage(Protocol.ERROR + " " + 120, handler1);
+                    } else server.sendMessage(Protocol.ERROR + " " + 120, handler2);
+                }
+            }catch (NumberFormatException e) {
+                if (handler1.getMyPlayer() == player) {
+                    server.sendMessage(Protocol.ERROR + " " + 120, handler1);
+                } else server.sendMessage(Protocol.ERROR + " " + 120, handler2);
+            }
         }
+    }
+
+    private void endGame() {
+        server.removeGame(this);
     }
 
     private void sendToBoth(String message) {

@@ -42,8 +42,7 @@ public class ClientHandler extends Thread {
 				if (message != null) {
 					handleMessage(message);
 				} else {
-					shutdown("Received empty string");
-					break;
+					shutdown("Received empty string.");
 				}
 			} catch (IOException e) {
 				shutdown("DEBUG: ");
@@ -71,7 +70,7 @@ public class ClientHandler extends Thread {
 	 * @param message
 	 */
 	public void handleMessage(String message) {
-		System.out.println("I just received a message");
+		System.out.println("I just received a message: " + message);
 		if (message.length() < 1) {
 			return;
 		}
@@ -86,7 +85,9 @@ public class ClientHandler extends Thread {
 		String command = split[0];
 		if (Objects.equals(split[0], "GAME") || Objects.equals(split[0], "CHALLENGE") || Objects.equals(split[0], "CHAT")
 				|| Objects.equals(split[0], "LEADERBOARD")) {
-			command = command + " " + split[1];
+			if (split.length > 1) {
+				command = command + " " + split[1];
+			}
 		}
 		
 		switch (command) {
@@ -129,16 +130,21 @@ public class ClientHandler extends Thread {
 			case Protocol.ERROR:
 				handleError(split);
 				break;
+			default:
+				System.out.println("An invalid command came in: " + command);
+				sendMessage(Protocol.ERROR + " 010");
 		}
 		
 	}
 
 	private void handleConnect(String[] command) {
-		if (server.setName(this, command[1])) {
-			server.addPlayer(command[1]);
-			this.name = command[1];
-			sendMessage(Protocol.CONFIRM + " " + server.getMYEXTS());
-		} else sendMessage(Protocol.ERROR + 190);
+		if (command.length > 1) {
+			if (server.setName(this, command[1])) {
+				server.addPlayer(command[1]);
+				this.name = command[1];
+				sendMessage(Protocol.CONFIRM + " " + server.getMYEXTS());
+			} else sendMessage(Protocol.ERROR + " 190");
+		} else sendMessage(Protocol.ERROR + " 011");
 	}
 
 	private void handleDisconnect(String[] command) {
@@ -146,12 +152,15 @@ public class ClientHandler extends Thread {
 	}
 
 	private void handleGameReady(String[] command) {
-		System.out.println("test");
-		server.updateReady(name, true);
+		if (command.length > 1) {
+			server.updateReady(name, true);
+		} else sendMessage(Protocol.ERROR + " 011");
 	}
 
 	private void handleGameUnready(String[] command) {
-		server.updateReady(name, false);
+		if (command.length > 1) {
+			server.updateReady(name, false);
+		} else sendMessage(Protocol.ERROR + " 011");
 	}
 
 	private void handleGameMove(String[] command) {
@@ -160,50 +169,59 @@ public class ClientHandler extends Thread {
 	}
 
 	private void handlePlayers(String[] command) {
-		String res = Protocol.PLAYERS;
-		for (String string : server.getPlayers()) {
-			res += " " + string;
+		if ((command.length < 2) || command[1].equals("ALL")) {
+			String res = Protocol.PLAYERS;
+			for (String string : server.getPlayers()) {
+				res += " " + string;
+			}
+			sendMessage(res);
 		}
-		sendMessage(res);
 	}
 
 	private void handleChallengeRequest(String[] command) {
 		// TODO Auto-generated method stub
-		
+		sendMessage(Protocol.ERROR + " 010");
 	}
 
 	private void handleChallengeDeny(String[] command) {
 		// TODO Auto-generated method stub
+		sendMessage(Protocol.ERROR + " 010");
 		
 	}
 
 	private void handleChatMessage(String[] command) {
 		// TODO Auto-generated method stub
+		sendMessage(Protocol.ERROR + " 010");
 		
 	}
 
 	private void handleChatUser(String[] command) {
 		// TODO Auto-generated method stub
+		sendMessage(Protocol.ERROR + " 010");
 		
 	}
 
 	private void handleLeaderboardAll(String[] command) {
 		// TODO Auto-generated method stub
+		sendMessage(Protocol.ERROR + " 010");
 		
 	}
 
 	private void handleLeaderboardUser(String[] command) {
 		// TODO Auto-generated method stub
+		sendMessage(Protocol.ERROR + " 010");
 		
 	}
 
 	private void handleError(String[] command) {
-		System.out.println(command);
-		
+		if (command[1].equals("012")) {
+			shutdown("Connection timed out.");
+		}
 	}
 
 	public void sendMessage(String message) {
 		try {
+			System.out.println("Sending message:" + message);
 			out.write(message);
 			out.newLine();
 			out.flush();
@@ -221,6 +239,7 @@ public class ClientHandler extends Thread {
 			out.close();
 			socket.close();
 			server.removeHandler(this);
+			server.removePlayer(name);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
