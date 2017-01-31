@@ -90,15 +90,19 @@ public class LobbyController implements Initializable {
 	@FXML
 	public void beginGame() throws IOException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ConnectFour.fxml"));
-		Parent window = (Parent) loader.load();
+		Stage stage = new Stage();
+		stage.setScene(new Scene((Parent) loader.load()));
+//		Parent window = (Parent) loader.load();
+		
 		
 		//Passing parameters between scenes
 		ConnectFourController controller = loader.<ConnectFourController>getController();
-
-		Stage stage = new Stage();
-		stage.setTitle("Connect Four 3D - Game");
-		stage.setScene(new Scene(window));
+		controller.setUsername(usernameText.getText());
 		stage.show();
+//		Stage stage = new Stage();
+//		stage.setTitle("Connect Four 3D - Game");
+//		stage.setScene(new Scene(window));
+//		stage.show();
 	}
 	
 	public synchronized void addToChatView(String playerName, String msg) {

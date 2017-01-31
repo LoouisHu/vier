@@ -4,11 +4,17 @@ import java.net.URL;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import javafx.concurrent.Task;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -37,6 +43,7 @@ public class ConnectFourController implements Initializable {
 	@FXML private Rectangle square24;
 	@FXML private Rectangle square34;
 	@FXML private Rectangle square44;
+	private Label usernameLabel;
 	
 	private Board board;
 	
@@ -44,8 +51,8 @@ public class ConnectFourController implements Initializable {
 		this.board = b;
 	}
 	
-	public void updateFloor(Board board) {
-		Map<Position, Mark> boardFloor = board.getFloor(Integer.parseInt(currentFloor.getText()));
+	public void updateFloor(Board aBoard) {
+		Map<Position, Mark> boardFloor = aBoard.getFloor(Integer.parseInt(currentFloor.getText()));
 		for (Position p : boardFloor.keySet()) {
 			int x = p.getX();
 			int y = p.getY();
@@ -118,13 +125,96 @@ public class ConnectFourController implements Initializable {
 		}
 	}
 	
+	public synchronized void addToChatView(String playerName, String msg) {
+		Task<HBox> otherMessages = new Task<HBox>() {
+
+			@Override
+			protected HBox call() throws Exception {
+				Label l = new Label();
+
+				//Put private conversation here? CHAT extension.
+				l.setText(playerName + ": " + msg);
+				l.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
+
+				
+				HBox x = new HBox();
+				x.getChildren().add(l);
+				return x;
+			}
+			
+		};
+		
+		otherMessages.setOnSucceeded(event -> {
+			chatView.getItems().add(otherMessages.getValue());
+		});
+		
+		Task<HBox> ownMessages = new Task<HBox>() {
+
+			@Override
+			protected HBox call() throws Exception {
+				Label l = new Label();
+				l.setText(usernameLabel.getText() + ": " + msg);
+				HBox x = new HBox();
+				x.getChildren().add(l);
+				return x;
+			} 
+			
+		};
+		ownMessages.setOnSucceeded(event -> {
+			chatView.getItems().add(ownMessages.getValue());
+		});
+		
+		if (!(playerName == usernameLabel.getText())) {
+			Thread t = new Thread(otherMessages);
+			t.setDaemon(true);
+			t.start();
+		} else {
+			Thread t2 = new Thread(ownMessages);
+			t2.setDaemon(true);
+			t2.start();
+		}
+	}
+	
 	public void sendSystemMessage(String msg) {
 		chatView.getItems().add(new HBox(new Label("[SYSTEM] " + msg)));
+	}
+	
+	public void setUsername(String s) {
+		usernameLabel.setText(s);
 	}
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		currentFloor.setText("1");
+		messageBox.setOnKeyPressed(new EventHandler<KeyEvent>() {
+			@Override
+			public void handle(KeyEvent event) {
+				if (event.getCode().equals(KeyCode.ENTER)) {
+					String msg = messageBox.getText();
+					if (!msg.isEmpty()) {
+						
+//						String[] split = msg.split("\\s+");
+//						
+//						if (msg.startsWith("/w")) {
+//							String player = split[1];
+//							String parsedMessage = Arrays.copyOfRange(split, 2, split.length).toString();
+//							//TODO send message to specific player
+//							addToChatView(usernameText.getText(), parsedMessage);
+//							messageBox.clear();
+//						} else {
+//							//TODO broadcast message to all players
+//							addToChatView(usernameText.getText(), msg);
+//							messageBox.clear();
+//						}
+						
+						addToChatView(usernameLabel.getText(), msg);
+						chatView.scrollTo(chatView.getItems().size() - 1);
+						messageBox.clear();	
+					}
+				}
+			}
+		});
+		chatView.getItems().add(new HBox(new Label("Hey, welcome!")));
 	}
 
 }
