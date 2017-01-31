@@ -87,6 +87,19 @@ public class BoardTest {
 		board.setMark(new Mark('d', new Position(3, 7, 4)));
 		board.setMark(new Mark('d', new Position(3, 6, 5)));
 		assertTrue(board.hasDiagonalFour(new Mark('d')));
+		
+		board.setMark(new Mark('e', new Position(1, 1, 1)));
+		board.setMark(new Mark('e', new Position(2, 2, 2)));
+		board.setMark(new Mark('e', new Position(3, 3, 3)));
+		board.setMark(new Mark('e', new Position(4, 4, 4)));
+		assertTrue(board.hasDiagonalFour(new Mark('e')));
+		
+		board.setMark(new Mark('f', new Position(9, 9, 9)));
+		board.setMark(new Mark('f', new Position(8, 8, 8)));
+		board.setMark(new Mark('f', new Position(7, 7, 7)));
+		board.setMark(new Mark('f', new Position(6, 6, 6)));
+		assertTrue(board.hasDiagonalFour(new Mark('f')));
+
 	}
 
 }

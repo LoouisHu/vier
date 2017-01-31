@@ -7,7 +7,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import controller.Client;
 import javafx.application.Platform;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -39,8 +41,8 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import model.Player;
 
 public class LobbyController implements Initializable {
@@ -50,6 +52,8 @@ public class LobbyController implements Initializable {
 	@FXML private Label usernameText;
 	@FXML private ListView<HBox> chatView;
 	@FXML private ScrollPane scrollPane;
+	private StringProperty usernameString;;
+	private Client client;
 	
 	public void setUsersList(List<String> users) {
 		List<String> players = new ArrayList<>();
@@ -87,18 +91,30 @@ public class LobbyController implements Initializable {
 		});
 	}
 	
-	@FXML
-	public void beginGame() throws IOException {
+	public void beginGame() throws Exception {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ConnectFour.fxml"));
-		Parent window = (Parent) loader.load();
+		AnchorPane anAnchorPane = loader.load();
+				
+		ConnectFourController controller = loader.getController();
+		System.out.println(usernameText.getText());
+		controller.setUsername(usernameText.getText());
 		
-		//Passing parameters between scenes
-		ConnectFourController controller = loader.<ConnectFourController>getController();
-
+		
 		Stage stage = new Stage();
 		stage.setTitle("Connect Four 3D - Game");
-		stage.setScene(new Scene(window));
+		stage.setScene(new Scene(anAnchorPane));
+		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+			@Override
+			public void handle(WindowEvent event) {
+				//TODO Send DISCONNECT to server
+				Platform.exit();
+			}
+		});
 		stage.show();
+	}
+	
+	public void setClient(Client client) {
+		this.client = client;
 	}
 	
 	public synchronized void addToChatView(String playerName, String msg) {
@@ -172,9 +188,9 @@ public class LobbyController implements Initializable {
 						
 //						String[] split = msg.split("\\s+");
 //						
-//						if (msg.startsWith("/w")) {
-//							String player = split[1];
-//							String parsedMessage = Arrays.copyOfRange(split, 2, split.length).toString();
+//						if (msg.startsWith("chat private")) {
+//							String player = split[2];
+//							String parsedMessage = Arrays.copyOfRange(split, 3, split.length).toString();
 //							//TODO send message to specific player
 //							addToChatView(usernameText.getText(), parsedMessage);
 //							messageBox.clear();

@@ -34,7 +34,8 @@
             <Rectangle fx:id="square34" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="134.0" layoutX="407.0" layoutY="433.0" stroke="BLACK" strokeType="INSIDE" width="143.0" />
             <Rectangle fx:id="square44" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="134.0" layoutX="550.0" layoutY="433.0" stroke="BLACK" strokeType="INSIDE" width="143.0" />
             <ListView fx:id="chatView" layoutX="745.0" layoutY="4.0" prefHeight="565.0" prefWidth="276.0" />
-            <TextField fx:id="chatInput" layoutX="745.0" layoutY="574.0" prefHeight="25.0" prefWidth="276.0" />
+            <TextField fx:id="messageBox" layoutX="745.0" layoutY="574.0" prefHeight="25.0" prefWidth="276.0" />
+            <Label fx:id="username" layoutX="31.0" layoutY="43.0" text="Label" />
          </children>
       </Pane>
    </children>
