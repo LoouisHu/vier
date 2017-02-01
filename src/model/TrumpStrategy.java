@@ -7,8 +7,8 @@ public class TrumpStrategy implements Strategy {
 
 	private String name;
 	
-	public TrumpStrategy() {
-		name = "Donald Trump";
+	public TrumpStrategy(String name) {
+		this.name = name;
 	}
 	
 	@Override

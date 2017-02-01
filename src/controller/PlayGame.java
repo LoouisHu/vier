@@ -43,6 +43,14 @@ public class PlayGame extends Thread {
         sendToBoth(res);
     }
 
+    public ClientHandler getHandler1() {
+        return handler1;
+    }
+
+    public ClientHandler getHandler2() {
+        return handler2;
+    }
+
     public void handleMove(String[] command, Player player) {
         if(command.length < 4) {
             if (handler1.getMyPlayer() == player) {

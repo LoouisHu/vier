@@ -95,11 +95,11 @@ public class LocalTUI {
                     + "Available strategies: <TrumpStrategy>");
             String s = sc.next();
             if (s.equals("Trump") || s.equals("TrumpStrategy")) {
-                result.add(new TrumpStrategy());
+                result.add(new TrumpStrategy("TrumpStrategy"));
             } else {
                 System.out.println("WRONG! We'll make this game GREAT AGAIN!");
                 System.out.println("(Trump Strategy has been assigned)");
-                result.add(new TrumpStrategy());
+                result.add(new TrumpStrategy("TrumpStrategy"));
             }
 
         }

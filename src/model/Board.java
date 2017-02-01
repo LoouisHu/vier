@@ -59,11 +59,15 @@ public class Board {
 
         if (!playedMarks.containsKey(new Position(x, y, z))) {
         	playedMarks.put(new Position(x, y, z), mark);
-        	availablePositions.add(new Position(x, y, z + 1));
+			if (getHighestZfromXY(x, y) < 4) {
+				availablePositions.add(new Position(x, y, z + 1));
+			}
         } else { 
         	z = getHighestZfromXY(x, y) + 1;
         	playedMarks.put(new Position(x, y, z), mark);
-        	availablePositions.add(new Position(x, y, z + 1));
+			if (getHighestZfromXY(x, y) < 4) {
+				availablePositions.add(new Position(x, y, z + 1));
+			}
         }
         
         availablePositions.remove(new Position(x, y, z));

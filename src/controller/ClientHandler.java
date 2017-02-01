@@ -140,7 +140,9 @@ public class ClientHandler extends Thread {
 	private void handleConnect(String[] command) {
 		if (command.length > 1) {
 			if (server.setName(this, command[1])) {
-				server.addPlayer(command[1]);
+				if (command.length > 2) {
+					server.addPlayer(command[1], command[2]);
+				} else server.addPlayer(command[1], "");
 				this.name = command[1];
 				sendMessage(Protocol.CONFIRM + " " + server.getMYEXTS());
 			} else sendMessage(Protocol.ERROR + " 190");
@@ -190,9 +192,33 @@ public class ClientHandler extends Thread {
 	}
 
 	private void handleChatMessage(String[] command) {
-		// TODO Auto-generated method stub
-		sendMessage(Protocol.ERROR + " 010");
-		
+		if (command.length > 3) {
+			if (command[2].equals("GLOBAL")) {
+				for (String player : server.getChatPlayers()) {
+					for (ClientHandler client : server.getClients()) {
+						if (client.getName().equals(player) && !player.equals(this.getName())) {
+							client.sendMessage(Protocol.CHAT_MESSAGE + " GLOBAL " + this.getName() + " " + command[3]);
+						}
+					}
+				}
+			} else if (command[2].equals("PRIVATE")) {
+				if (command.length > 4) {
+					if (server.getChatPlayers().contains(command[3])) {
+						for (ClientHandler client : server.getClients()) {
+							if (client.getName().equals(command[3])) {
+								client.sendMessage(Protocol.CHAT_MESSAGE + " PRIVATE " + this.getName() + " " + command[4]);
+							}
+						}
+					}
+				} else sendMessage(Protocol.ERROR + " 011");
+			} else if (command[2].equals("GAME")) {
+				if (!game.getHandler1().equals(this)) {
+					game.getHandler1().sendMessage(Protocol.CHAT_MESSAGE + " GAME " + command[3]);
+				} else if (!game.getHandler2().equals(this)) {
+					game.getHandler2().sendMessage(Protocol.CHAT_MESSAGE + " GAME " + command[3]);
+				}
+			} else sendMessage(Protocol.ERROR + " 011");
+		}
 	}
 
 	private void handleChatUser(String[] command) {

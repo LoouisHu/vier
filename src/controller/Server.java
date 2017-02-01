@@ -18,10 +18,11 @@ public class Server extends Thread {
 	private static List<ClientHandler> clients;
 	private TUI myTUI;
 	private static Server server;
-	private final String MYEXTS = "";
+	private final String MYEXTS = "1";
 	private static ServerSocket ssock;
 	private static ArrayList<String> readyPlayers;
 	private static ArrayList<String> players;
+	private static ArrayList<String> chatPlayers;
 	private static ArrayList<PlayGame> games;
 
 	public static void main(String[] args) {
@@ -83,8 +84,11 @@ public class Server extends Thread {
 		}
 	}
 
-	public void addPlayer(String player) {
+	public void addPlayer(String player, String exts) {
 		players.add(player);
+		if (exts.contains("1")) {
+			chatPlayers.add(player);
+		}
 	}
 
 	public void removePlayer(String player) {
@@ -108,13 +112,17 @@ public class Server extends Thread {
 		return MYEXTS;
 	}
 
+	public static ArrayList<String> getChatPlayers() {
+		return chatPlayers;
+	}
+
 	public void removeGame(PlayGame game) {
 		games.remove(game);
 	}
 
 	public Server() {
 		myTUI = new TUI();
-
+		chatPlayers = new ArrayList<>();
 	}
 
 	public void sendMessage(String message, ClientHandler client) {

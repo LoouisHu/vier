@@ -28,9 +28,10 @@ public class Client  {
 	private ArrayList<String> allPlayers = new ArrayList<>();
 	private TUI myTUI;
 	private int myNumerInGame = 0;
-	private final String MYEXTS = "";
+	private final String MYEXTS = "1";
 	private static ClientInput clientInput;
 	private char[] alphabet = "abcdefghjiklmnopqrstuvwxyz".toCharArray();
+	private boolean isComputer = false;
 
 	public static void main(String[] args) {
 		try {
@@ -44,8 +45,16 @@ public class Client  {
 	
 	public Client() throws IOException {
 		myTUI = new TUI();
+		exts = new ArrayList<>();
 		clientInput = new ClientInput(this);
-		clientName = myTUI.askString("What username do you want to go by?");
+		clientName = myTUI.askString("What username do you want to go by? (no spaces, only letters; if you want a computerplayer type '[name] Computer')");
+		String[] split = clientName.split(" ");
+		if (split.length > 1) {
+			clientName = split[0];
+			if (split[1].equals("Computer")) {
+				isComputer = true;
+			}
+		}
 		System.out.println("Your name: " + clientName + ".");
 		String ipAddr = myTUI.askString("Please enter server IP address.");
 		String port = myTUI.askString("Please enter server port number.");
@@ -90,7 +99,11 @@ public class Client  {
 			e.printStackTrace();
 		}
 	}
-	
+
+	public String getClientName() {
+		return clientName;
+	}
+
 	public void receiveMessage() {
 		try {
 			while (true) {
@@ -203,7 +216,11 @@ public class Client  {
 		Player player;
 		for (int j = 2; j < command.length; j++) {
 			if (command[j].equals(clientName)) {
-				player = new HumanPlayer(command[j], new Mark(alphabet[j]));
+				if (isComputer) {
+					player = new ComputerPlayer(new TrumpStrategy(command[j]), new Mark(alphabet[j]));
+				} else {
+					player = new HumanPlayer(command[j], new Mark(alphabet[j]));
+				}
 				myNumerInGame = j - 2;
 			} else {
 				player = new RemotePlayer(command[j], new Mark(alphabet[j]));
@@ -240,11 +257,12 @@ public class Client  {
 	}
 
 	private void handleGameEnd(String[] command) {
-		if (!command[2].equals("DRAW")) {
-			System.out.println("The game ended in a draw.");
-		}
-		else {
-			System.out.println(command[3] + " wins!");
+		if (command.length > 2) {
+			if (command[2].equals("DRAW")) {
+				System.out.println("The game ended in a draw.");
+			} else if (command.length > 3){
+				System.out.println(command[3] + " wins!");
+			}
 		}
 		askReady();
 	}
@@ -259,27 +277,38 @@ public class Client  {
 
 	private void handleChallengeRequest(String[] command) {
 		// TODO Auto-generated method stub
-		
+		sendMessage(Protocol.ERROR + " 010");
 	}
 
 	private void handleChallengeDeny(String[] command) {
 		// TODO Auto-generated method stub
-		
+		sendMessage(Protocol.ERROR + " 010");
 	}
 
 	private void handleChatMessage(String[] command) {
 		// TODO Auto-generated method stub
-		
+		if (command.length > 4) {
+			if (command[2].equals("GLOBAL")) {
+				System.out.println("A global chat message came in from " + command[3] + ":");
+				System.out.println(command[4]);
+			} else if (command[2].equals("GAME")) {
+				System.out.println("A gamewide chat message came in from " + command[3] + ":");
+				System.out.println(command[4]);
+			} else if (command[2].equals("PRIVATE")) {
+				System.out.println("A private chat message came in from " + command[3] + ":");
+				System.out.println(command[4]);
+			} else sendMessage(Protocol.ERROR + "011");
+		}
 	}
 
 	private void handleChatUser(String[] command) {
 		// TODO Auto-generated method stub
-		
+		sendMessage(Protocol.ERROR + " 010");
 	}
 
 	private void handleLeaderboardList(String[] command) {
 		// TODO Auto-generated method stub
-		
+		sendMessage(Protocol.ERROR + " 010");
 	}
 
 	private void handleError(String[] command) {
