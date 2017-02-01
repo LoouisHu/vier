@@ -50,7 +50,6 @@ public class Client  {
 	public Client() throws IOException {
 		myTUI = new TUI();
 		exts = new ArrayList<>();
-		clientInput = new ClientInput(this);
 		clientName = myTUI.askString("What username do you want to go by? (no spaces, only letters; if you want a computerplayer type '[name] Computer')");
 		String[] split = clientName.split(" ");
 		if (split.length > 1) {
@@ -71,6 +70,7 @@ public class Client  {
 			System.out.println("Something went wrong, please try again!");
 		}
 		sendMessage(Protocol.CONNECT + " " + clientName + " " + MYEXTS);
+		clientInput = new ClientInput(this);
 		clientInput.start();
 	}
 
@@ -356,8 +356,7 @@ public class Client  {
 	}
 
 	private void askReady() {
-		myTUI.askString("Please type anything when you are ready to play a game.");
-		sendMessage(Protocol.GAME_READY);
+		System.out.println("Please type 'ready' when you are ready to play a game.");
 	}
 
 

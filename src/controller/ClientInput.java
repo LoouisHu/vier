@@ -1,9 +1,6 @@
 package controller;
 
-import model.Board;
-import model.HumanPlayer;
-import model.Player;
-import model.Position;
+import model.*;
 
 import java.util.Scanner;
 
@@ -50,6 +47,19 @@ public class ClientInput extends Thread {
                     client.chat(split);
                 } else if (msg.equals("players")) {
                     client.players(split);
+                } else if (split[0].equals("hint")) {
+                    Board board;
+                    try {
+                        board = client.getGame().getBoard();
+                    } catch (Exception e) {
+                        System.out.println("Please join a game first.");
+                        break;
+                    }
+                    Player me = client.getGame().getPlayers().get(client.getMyNumerInGame());
+                    Mark myMark = me.getMark();
+                    TrumpStrategy trump = new TrumpStrategy("Jan");
+                    Mark hint = trump.determineMove(board, myMark);
+                    System.out.println("A possible move would be x=" + hint.getPosition().getX() + " y=" + hint.getPosition().getY());
                 } else if (split[0].equals("move")) {
                     if (split.length > 2) {
                         Board board;
@@ -79,12 +89,18 @@ public class ClientInput extends Thread {
                             ((HumanPlayer) me).setUpdate(update);
                             suspend();
                         } else {
-                            System.out.println("Can't make a move for a computer player.");
+                            System.out.println("Something went wrong.");
                         }
                     }
+                } else if (split[0].equals("ready")) {
+                    client.sendMessage(Protocol.GAME_READY);
+                } else if (split[0].equals("show")) {
+                    System.out.println(client.getGame().getBoard().toString());
                 } else {
                     System.out.println("USAGE:");
+                    System.out.println("Type 'show' to view the current board.");
                     System.out.println("When it's your turn, make a move using 'move [x] [y]'");
+                    System.out.println("Type 'hint' to get a hint.");
                     System.out.println("Private chat to a user using "
                     		+ "'chat private [username] [message]'");
                     System.out.println("Chat to all users using 'chat global [message]");
