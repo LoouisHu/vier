@@ -8,6 +8,7 @@ import java.util.Random;
 import java.util.ResourceBundle;
 
 import controller.Client;
+import controller.GUIClient;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -37,18 +38,17 @@ public class LoginController implements Initializable {
 	
 	private double xOffset;
 	private double yOffset;
-	private Client client;
+	private GUIClient client;
 	
 	
 	public void loginButtonAction() throws IOException {
 		
 		String username = usernameTextField.getText();
 		String host = hostTextField.getText();
-		int port = Integer.parseInt(portTextField.getText());
+		String port = portTextField.getText();
 		
 		if (!username.isEmpty() && !host.isEmpty()) {
-		
-			//TODO Send port and host
+			client.connectMe(host, port);
 			
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Lobby.fxml"));
 			Parent window = (Parent) loader.load();
@@ -64,7 +64,7 @@ public class LoginController implements Initializable {
 			stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 				@Override
 				public void handle(WindowEvent event) {
-					//TODO Send DISCONNECT to server
+					client.disconnect();
 					event.consume();
 					Platform.exit();
 				}
@@ -76,7 +76,7 @@ public class LoginController implements Initializable {
 		
 	}
 	
-	public void setClient(Client client) {
+	public void setClient(GUIClient client) {
 		this.client = client;
 	}
 	

@@ -42,7 +42,11 @@ public class Client  {
 		}
 
 	}
-	
+
+	public Game getGame() {
+		return game;
+	}
+
 	public Client() throws IOException {
 		myTUI = new TUI();
 		exts = new ArrayList<>();
@@ -129,6 +133,14 @@ public class Client  {
 			}
 		}
 		return 0;
+	}
+
+	public ArrayList<String> getAllPlayers() {
+		return allPlayers;
+	}
+
+	public int getMyNumerInGame() {
+		return myNumerInGame;
 	}
 
 	/**
@@ -220,6 +232,9 @@ public class Client  {
 					player = new ComputerPlayer(new TrumpStrategy(command[j]), new Mark(alphabet[j]));
 				} else {
 					player = new HumanPlayer(command[j], new Mark(alphabet[j]));
+					if (player instanceof HumanPlayer) {
+						((HumanPlayer) player).setClientInput(clientInput);
+					}
 				}
 				myNumerInGame = j - 2;
 			} else {
@@ -231,11 +246,12 @@ public class Client  {
 		myTUI.updateGameState(game.getBoard());
 		Mark m;
 		if (command[2].equals(clientName)) {
+			System.out.println("You start.");
 			m = game.getPlayers().get(myNumerInGame).determineMove(game.getBoard());
 			int localx = m.getPosition().getX();
 			int localy = m.getPosition().getY();
 			sendMessage(Protocol.GAME_MOVE + " " + --localx + " " + --localy);
-		}
+		} else System.out.println("They start.");
 	}
 
 	private void handleGameMove(String[] command) {
@@ -249,6 +265,7 @@ public class Client  {
 		game.getBoard().setMark(m);
 		myTUI.updateGameState(game.getBoard());
 		if (!(command.length < 6) && command[5].equals(clientName)) {
+			System.out.println("It is your turn. Please make a move or type 'help'.");
 			m = game.getPlayers().get(myNumerInGame).determineMove(game.getBoard());
 			int localx = m.getPosition().getX();
 			int localy = m.getPosition().getY();

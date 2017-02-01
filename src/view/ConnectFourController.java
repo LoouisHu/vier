@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import controller.GUIClient;
 import javafx.concurrent.Task;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -44,6 +45,7 @@ public class ConnectFourController implements Initializable {
 	@FXML private Rectangle square24;
 	@FXML private Rectangle square34;
 	@FXML private Rectangle square44;
+	private GUIClient client;
 	
 	private Board board;
 	
@@ -114,6 +116,10 @@ public class ConnectFourController implements Initializable {
 		}
 		
 	}
+
+	public void setClient(GUIClient client) {
+		this.client = client;
+	}
 	
 	@FXML 
 	public void actionButtonDown() {
@@ -149,6 +155,8 @@ public class ConnectFourController implements Initializable {
 		});
 		
 		Task<HBox> ownMessages = new Task<HBox>() {
+
+
 
 			@Override
 			protected HBox call() throws Exception {

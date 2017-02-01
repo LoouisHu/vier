@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import controller.Client;
+import controller.GUIClient;
 import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
@@ -53,7 +54,7 @@ public class LobbyController implements Initializable {
 	@FXML private ListView<HBox> chatView;
 	@FXML private ScrollPane scrollPane;
 	private StringProperty usernameString;;
-	private Client client;
+	private GUIClient client;
 	
 	public void setUsersList(List<String> users) {
 		List<String> players = new ArrayList<>();
@@ -114,7 +115,7 @@ public class LobbyController implements Initializable {
 		stage.show();
 	}
 	
-	public void setClient(Client client) {
+	public void setClient(GUIClient client) {
 		this.client = client;
 	}
 	
