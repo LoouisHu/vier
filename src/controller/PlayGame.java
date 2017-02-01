@@ -69,29 +69,37 @@ public class PlayGame extends Thread {
                     Position result = new Position(x, y, board.getHighestZfromXY(x, y));
                     System.out.println("z: " + result.getZ());
                     Mark m = new Mark(player.getMark().getChar(), result);
-                    board.setMark(m);
-                    server.getMyTUI().updateGameState(board);
-                    if (board.gameOver(player)) {
-                        sendToBoth(Protocol.GAME_MOVE + " " +
-                        		player.getName() + " " + --x + " " + --y);
-                        sendToBoth(Protocol.GAME_END + " " + "PLAYER" + " " + player.getName());
-                        endGame();
-                    } else if (board.hasDraw()) {
-                        sendToBoth(Protocol.GAME_MOVE + " " +
-                        		player.getName() + " " + --x + " " + --y);
-                        sendToBoth(Protocol.GAME_END + " " + "DRAW");
-                        endGame();
-                    } else {
-                        String otherPlayer = "";
-                        {
-                            for (Player curPlay : players) {
-                                if (!player.getName().equals(curPlay.getName())) {
-                                    otherPlayer = curPlay.getName();
+                    if (!(board.greaterThanFour(m) || board.getHighestZfromXY(x, y) > 3)) {
+                        board.setMark(m);
+                        server.getMyTUI().updateGameState(board);
+                        if (board.gameOver(player)) {
+                            sendToBoth(Protocol.GAME_MOVE + " " +
+                                    player.getName() + " " + --x + " " + --y);
+                            sendToBoth(Protocol.GAME_END + " " + "PLAYER" + " " + player.getName());
+                            endGame();
+                        } else if (board.hasDraw()) {
+                            sendToBoth(Protocol.GAME_MOVE + " " +
+                                    player.getName() + " " + --x + " " + --y);
+                            sendToBoth(Protocol.GAME_END + " " + "DRAW");
+                            endGame();
+                        } else {
+                            String otherPlayer = "";
+                            {
+                                for (Player curPlay : players) {
+                                    if (!player.getName().equals(curPlay.getName())) {
+                                        otherPlayer = curPlay.getName();
+                                    }
                                 }
                             }
+                            sendToBoth(Protocol.GAME_MOVE + " " +
+                                    player.getName() + " " + --x + " " + --y + " " + otherPlayer);
                         }
-                        sendToBoth(Protocol.GAME_MOVE + " " +
-                        		player.getName() + " " + --x + " " + --y + " " + otherPlayer);
+                    } else {
+                        if (handler1.getMyPlayer() == player) {
+                            server.sendMessage(Protocol.ERROR + " " + 120, handler1);
+                        } else {
+                            server.sendMessage(Protocol.ERROR + " " + 120, handler2);
+                        }
                     }
                 } else {
                     if (handler1.getMyPlayer() == player) {

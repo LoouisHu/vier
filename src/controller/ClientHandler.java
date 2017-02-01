@@ -220,9 +220,9 @@ public class ClientHandler extends Thread {
 				} else sendMessage(Protocol.ERROR + " 011");
 			} else if (command[2].equals("GAME")) {
 				if (!game.getHandler1().equals(this)) {
-					game.getHandler1().sendMessage(Protocol.CHAT_MESSAGE + " GAME " + command[3]);
+					game.getHandler1().sendMessage(Protocol.CHAT_MESSAGE + " GAME " + this.getName() + " " + command[3]);
 				} else if (!game.getHandler2().equals(this)) {
-					game.getHandler2().sendMessage(Protocol.CHAT_MESSAGE + " GAME " + command[3]);
+					game.getHandler2().sendMessage(Protocol.CHAT_MESSAGE + " GAME " + this.getName() + " " + command[3]);
 				}
 			} else sendMessage(Protocol.ERROR + " 011");
 		}
