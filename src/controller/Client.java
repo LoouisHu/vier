@@ -217,7 +217,7 @@ public class Client  {
 		for (int j = 2; j < command.length; j++) {
 			if (command[j].equals(clientName)) {
 				if (isComputer) {
-					player = new ComputerPlayer(new TrumpStrategy(command[j]), new Mark(alphabet[j]));
+					player = new ComputerPlayer(new NaiveStrategy(command[j]), new Mark(alphabet[j]));
 				} else {
 					player = new HumanPlayer(command[j], new Mark(alphabet[j]));
 				}

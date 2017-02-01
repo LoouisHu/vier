@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.sun.org.apache.xerces.internal.dom.PSVIDOMImplementationImpl;
+
 import tests.LocalGameClass;
 
 /**
@@ -507,8 +509,10 @@ public class Board {
     	
     	int counter = 0;
     	
-    	for (Position p : availablePositions) {
-    		if (getHighestZfromXY(p.getX(), p.getY()) == 4) {
+    	Set<Position> positions = getFloor(1).keySet();
+    	
+    	for (Position p : positions) {
+    		if (getHighestZfromXY(p.getX(), p.getY()) >= 4) {
     			counter++;
     		}
     	}
@@ -569,6 +573,15 @@ public class Board {
     	}
     	
     	return result.toString();
+    }
+    
+    public static void main(String[] args) {
+    	Board b = new Board(4);
+    	b.setMark(new Mark('a', new Position(1, 1, 1)));
+    	System.out.println(b.getHighestZfromXY(1, 1));
+    	b.setMark(new Mark('b', new Position(1, 1, 2)));
+    	System.out.println(b.getHighestZfromXY(1, 1));
+    	
     }
 
 }

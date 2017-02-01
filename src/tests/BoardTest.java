@@ -88,6 +88,7 @@ public class BoardTest {
 		board.setMark(new Mark('d', new Position(3, 6, 5)));
 		assertTrue(board.hasDiagonalFour(new Mark('d')));
 		
+//		System.out.println(board.getPlayedMarks().containsKey(new Position(3, 9, 2)));
 		board.setMark(new Mark('e', new Position(1, 1, 1)));
 		board.setMark(new Mark('e', new Position(2, 2, 2)));
 		board.setMark(new Mark('e', new Position(3, 3, 3)));
@@ -100,6 +101,18 @@ public class BoardTest {
 		board.setMark(new Mark('f', new Position(6, 6, 6)));
 		assertTrue(board.hasDiagonalFour(new Mark('f')));
 
+	}
+	
+	@Test
+	public void testHasDraw() {
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 9; j++) {
+				for (int k = 0; k < 9; k++) {
+					board.setMark(new Mark('a', new Position(i + 1, j + 1, k + 1)));
+				}
+			}
+		}
+		assertTrue(board.hasDraw());
 	}
 
 }
