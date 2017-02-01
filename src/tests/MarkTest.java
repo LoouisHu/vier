@@ -21,7 +21,7 @@ public class MarkTest {
 	@Test
 	public void testMark() {
 		assertEquals(mark1.getChar(), new Mark('a').getChar());
-		assertEquals(mark2.getPosition(), new Position(1, 1, 1));
+		assertEquals(mark2.getPosition().getX(), new Position(1, 1, 1).getX());
 	}
 
 }

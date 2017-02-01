@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.sun.org.apache.xerces.internal.dom.PSVIDOMImplementationImpl;
+
 import tests.LocalGameClass;
 
 /**
@@ -434,7 +436,6 @@ public class Board {
     				result = true;
     				break;
     			}
-				
 				if (playedMarks.containsKey(new Position(x + 1, y + 1, z + 1))
 					&& playedMarks.get(new Position(x + 1, y + 1, z + 1))
 					.getChar() == markie.getChar()
@@ -502,8 +503,10 @@ public class Board {
     	
     	int counter = 0;
     	
-    	for (Position p : availablePositions) {
-    		if (getHighestZfromXY(p.getX(), p.getY()) == 4) {
+    	Set<Position> positions = getFloor(1).keySet();
+    	
+    	for (Position p : positions) {
+    		if (getHighestZfromXY(p.getX(), p.getY()) >= 4) {
     			counter++;
     		}
     	}
