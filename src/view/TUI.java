@@ -3,6 +3,7 @@ package view;
 import exceptions.IllegalIntegerException;
 import model.*;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /**
@@ -40,16 +41,22 @@ public class TUI {
         int y = -1;
 
         System.out.print(player.getName() + ", what's your x? (1-" + board.getBoardLength() + "): ");
-        x = sc.nextInt();
-        System.out.print(player.getName() + ", what's your y? (1-" + board.getBoardLength() + "): ");
-        y = sc.nextInt();
-
-        if (x < 1 || x > board.getBoardLength()) {
-            throw new IllegalIntegerException(x);
+        try {
+            x = sc.nextInt();
+            System.out.print(player.getName() + ", what's your y? (1-" + board.getBoardLength() + "): ");
+            y = sc.nextInt();
+        } catch (InputMismatchException e) {
+            System.out.println("Please enter an integer instead of something else.");
+            Position temp = askPosition(player, board);
+            x = temp.getX();
+            y = temp.getY();
         }
 
-        if (y < 1 || y > board.getBoardLength()) {
-            throw new IllegalIntegerException(y);
+        if (x < 1 || x > board.getBoardLength() || y < 1 || y > board.getBoardLength() || (board.getHighestZfromXY(x, y) > 3)) {
+            System.out.println("Move not valid.");
+            Position temp = askPosition(player, board);
+            x = temp.getX();
+            y = temp.getY();
         }
 
         p = new Position(x, y);

@@ -77,7 +77,7 @@ public class Board {
     	availablePositions.clear();
     	placeAvailablePositions();
     }
-    
+    //@ensures getAvailablePositions.size() == getBoardLength() * getBoardLength();
     private void placeAvailablePositions() {
         for (int i = 0; i < boardLength; i++) {
             for (int j = 0; j < boardLength; j++) {
@@ -108,7 +108,7 @@ public class Board {
     //@pure
     //@requires x > 1 && x < boardLength;
     //@requires y > 1 && x < boardLength;
-    //@ensures \result == > 0;
+    //@ensures (\result > 0);
     public int getHighestZfromXY(int x, int y) {
     	HashMap<Position, Mark> playMarks = playedMarks;
     	int result = 0;
@@ -129,7 +129,7 @@ public class Board {
     //@pure
     //@requires z > 0 && z < zAxis;
     //@ensures (\forall Position p; result.keySet().contains(p));
-    //@ensures (\exist z == p.getZ());
+    //@ensures (\exists int z; z == p.getZ());
     public HashMap<Position, Mark> getFloor(int z) {
     	HashMap<Position, Mark> result = new HashMap<Position, Mark>();
     	for (Position p : playedMarks.keySet()) {
@@ -143,12 +143,28 @@ public class Board {
     /*@
       	requires m.getChar != null;
        	requires getPlayedMarks().keySet().contains(m.getPosition());
+     *@	requires m.getChar() != null;
     	ensures (\forall int i; 0 < playedMarks.size();
     			(Mark) playedMarks.values().toArray()[i] != null;
     				;(\exists playedMarks.values().toArray()[i].getChar() == m.getChar();
     					(\exists playedMarks.get(new Position(p.getX() + 1, p.getY(), p.getZ())).getChar() == markie.getChar()
-    					&& playedMarks.get(new Position(p.get + 2, y, z)).getChar() == markie.getChar()
+    					&& playedMarks.get(new Position(p.getX() + 2, y, z)).getChar() == markie.getChar()
     					&& playedMarks.get(new Position(x + 3, y, z)).getChar() == markie.getChar());
+    					(\exists playedMarks.get(new Position(p.getX() + 1, p.getY() + 1, p.getZ())).getChar() == markie.getChar()
+    					&& playedMarks.get(new Position(p.getX() + 2, y + 2, z)).getChar() == markie.getChar()
+    					&& playedMarks.get(new Position(x + 3, y, z)).getChar() == markie.getChar());
+    					(\exists playedMarks.get(new Position(p.getX() + 1, p.getY(), p.getZ())).getChar() == markie.getChar()
+    					&& playedMarks.get(new Position(p.getX() + 2, y, z)).getChar() == markie.getChar()
+    					&& playedMarks.get(new Position(x + 3, y, z)).getChar() == markie.getChar());
+    					(\exists playedMarks.get(new Position(p.getX() + 1, p.getY(), p.getZ())).getChar() == markie.getChar()
+    					&& playedMarks.get(new Position(p.getX() + 2, y, z)).getChar() == markie.getChar()
+    					&& playedMarks.get(new Position(x + 3, y, z)).getChar() == markie.getChar());
+    					(\exists playedMarks.get(new Position(p.getX() + 1, p.getY(), p.getZ())).getChar() == markie.getChar()
+    					&& playedMarks.get(new Position(p.getX() + 2, y, z)).getChar() == markie.getChar()
+    					&& playedMarks.get(new Position(x + 3, y, z)).getChar() == markie.getChar());
+    					(\exists playedMarks.get(new Position(p.getX() + 1, p.getY(), p.getZ())).getChar() == markie.getChar()
+    					&& playedMarks.get(new Position(p.getX() + 2, y, z)).getChar() == markie.getChar()
+    					&& playedMarks.get(new Position(x + 3, y, z)).getChar() == markie.getChar());    					
     					
     					
      */

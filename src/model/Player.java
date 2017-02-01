@@ -13,6 +13,7 @@ public abstract class Player {
 		this.mark = playerMark;
 	} 
 	
+	//@pure
 	public String getName() {
 		return name;
 	}
@@ -21,6 +22,7 @@ public abstract class Player {
 		name = newName;
 	}
 	
+	//@pure
 	public Mark getMark() {
 		return mark;
 	}
@@ -32,7 +34,12 @@ public abstract class Player {
 	public abstract Mark determineMove(Board board);
 	
 	public void makeMove(Board board) {
-		Mark chosenMark = determineMove(board);
+		Mark chosenMark = null;
+		try {
+			chosenMark = determineMove(board);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		board.setMark(chosenMark);
 	}
 

@@ -16,10 +16,12 @@ public class Mark {
     	this.p = p;
     }
 
+    //@pure
     public char getChar() {
         return mark;
     }
 
+    //@pure
     public Position getPosition() {
     	return p;
     }

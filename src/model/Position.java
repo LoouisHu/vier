@@ -19,14 +19,17 @@ public class Position {
     	this.y = y;
     }
 
+    //@pure
     public int getX() {
         return x;
     }
 
+    //@pure
     public int getY() {
         return y;
     }
 
+    //@pure
     public int getZ() {
         return z;
     }

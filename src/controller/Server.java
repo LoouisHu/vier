@@ -2,7 +2,6 @@ package controller;
 
 import model.Mark;
 import model.RemotePlayer;
-import view.LocalTUI;
 import view.TUI;
 
 import java.io.IOException;
@@ -13,11 +12,11 @@ import java.util.List;
 
 public class Server extends Thread {
 	
-	private static int port;
+	private static String port;
 	private static List<ClientHandler> clients;
 	private TUI myTUI;
 	private static Server server;
-	private final String MYEXTS = "";
+	private static final String MYEXTS = "";
 	private static ServerSocket ssock;
 	private static ArrayList<String> readyPlayers;
 	private static ArrayList<String> players;
@@ -30,18 +29,23 @@ public class Server extends Thread {
 		games = new ArrayList<>();
 		server = new Server();
 		while (ssock == null) {
-			String port = server.myTUI.askString("Enter desired port nr.");
+			port = server.myTUI.askString("Enter desired port nr.");
 			try {
 				ssock = new ServerSocket(Integer.parseInt(port));
 			} catch (IOException e) {
 				System.out.println("Something went wrong, please retry!");
 			}
 		}
+		System.out.println("Starting server on port " + port);
 		server.start();
 	}
 
 	public static ArrayList<String> getReadyPlayers() {
 		return readyPlayers;
+	}
+
+	public TUI getMyTUI() {
+		return myTUI;
 	}
 
 	public void updateReady(String name, boolean ready) {
@@ -81,6 +85,15 @@ public class Server extends Thread {
 		players.add(player);
 	}
 
+	public void removePlayer(String player) {
+		if (players.contains(player)) {
+			players.remove(player);
+		}
+		if (readyPlayers.contains(player)) {
+			readyPlayers.remove(player);
+		}
+	}
+
 	public static ArrayList<String> getPlayers() {
 		return players;
 	}
@@ -93,12 +106,17 @@ public class Server extends Thread {
 		return MYEXTS;
 	}
 
+	public void removeGame(PlayGame game) {
+		games.remove(game);
+	}
+
 	public Server() {
 		myTUI = new TUI();
 
 	}
 
 	public void sendMessage(String message, ClientHandler client) {
+		System.out.println("Sending message:" + message);
 		client.sendMessage(message);
 	}
 
@@ -109,6 +127,7 @@ public class Server extends Thread {
 	}
 
 	public void removeHandler(ClientHandler client) {
+		client.interrupt();
 		clients.remove(client);
 
 	}
