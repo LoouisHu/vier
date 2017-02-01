@@ -441,7 +441,6 @@ public class Board {
     				result = true;
     				break;
     			}
-				
 				if (playedMarks.containsKey(new Position(x + 1, y + 1, z + 1))
 					&& playedMarks.get(new Position(x + 1, y + 1, z + 1))
 					.getChar() == markie.getChar()
@@ -573,15 +572,6 @@ public class Board {
     	}
     	
     	return result.toString();
-    }
-    
-    public static void main(String[] args) {
-    	Board b = new Board(4);
-    	b.setMark(new Mark('a', new Position(1, 1, 1)));
-    	System.out.println(b.getHighestZfromXY(1, 1));
-    	b.setMark(new Mark('b', new Position(1, 1, 2)));
-    	System.out.println(b.getHighestZfromXY(1, 1));
-    	
     }
 
 }

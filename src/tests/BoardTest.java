@@ -88,12 +88,12 @@ public class BoardTest {
 		board.setMark(new Mark('d', new Position(3, 6, 5)));
 		assertTrue(board.hasDiagonalFour(new Mark('d')));
 		
-//		System.out.println(board.getPlayedMarks().containsKey(new Position(3, 9, 2)));
+//		Correctly false, because there is already a mark placed on (1, 1, 1) with a different char.
 		board.setMark(new Mark('e', new Position(1, 1, 1)));
 		board.setMark(new Mark('e', new Position(2, 2, 2)));
 		board.setMark(new Mark('e', new Position(3, 3, 3)));
 		board.setMark(new Mark('e', new Position(4, 4, 4)));
-		assertTrue(board.hasDiagonalFour(new Mark('e')));
+		assertFalse(board.hasDiagonalFour(new Mark('e')));
 		
 		board.setMark(new Mark('f', new Position(9, 9, 9)));
 		board.setMark(new Mark('f', new Position(8, 8, 8)));
@@ -105,9 +105,9 @@ public class BoardTest {
 	
 	@Test
 	public void testHasDraw() {
-		for (int i = 0; i < 9; i++) {
-			for (int j = 0; j < 9; j++) {
-				for (int k = 0; k < 9; k++) {
+		for (int i = 0; i < board.getBoardLength(); i++) {
+			for (int j = 0; j < board.getBoardLength(); j++) {
+				for (int k = 0; k < board.getBoardLength(); k++) {
 					board.setMark(new Mark('a', new Position(i + 1, j + 1, k + 1)));
 				}
 			}
