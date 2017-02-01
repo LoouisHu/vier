@@ -1,9 +1,7 @@
 package controller;
 
 import model.Mark;
-import model.Player;
 import model.RemotePlayer;
-import view.LocalTUI;
 import view.TUI;
 
 import java.io.IOException;
@@ -18,7 +16,7 @@ public class Server extends Thread {
 	private static List<ClientHandler> clients;
 	private TUI myTUI;
 	private static Server server;
-	private final String MYEXTS = "";
+	private static final String MYEXTS = "";
 	private static ServerSocket ssock;
 	private static ArrayList<String> readyPlayers;
 	private static ArrayList<String> players;

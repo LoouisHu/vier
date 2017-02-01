@@ -28,7 +28,7 @@ public class Client  {
 	private ArrayList<String> allPlayers = new ArrayList<>();
 	private TUI myTUI;
 	private int myNumerInGame = 0;
-	private final String MYEXTS = "";
+	private static final String MYEXTS = "";
 	private static ClientInput clientInput;
 	private char[] alphabet = "abcdefghjiklmnopqrstuvwxyz".toCharArray();
 
@@ -109,7 +109,7 @@ public class Client  {
 		}
 	}
 
-	private int playerNumberInGame (String playerName){
+	private int playerNumberInGame(String playerName) {
 		for (Player player : game.getPlayers()) {
 			if (player.getName().equals(playerName)) {
 				return game.getPlayers().indexOf(player);
@@ -136,8 +136,8 @@ public class Client  {
 		}
 
 		String command = split[0];
-		if (Objects.equals(split[0], "GAME") || Objects.equals(split[0], "CHALLENGE") || Objects.equals(split[0], "CHAT")
-			      || Objects.equals(split[0], "LEADERBOARD")) {
+		if (Objects.equals(split[0], "GAME") || Objects.equals(split[0], "CHALLENGE") 
+				|| Objects.equals(split[0], "CHAT") || Objects.equals(split[0], "LEADERBOARD")) {
 			command = command + " " + split[1];
 		}
 		
@@ -174,6 +174,7 @@ public class Client  {
 				break;
 			case Protocol.GAME_END:
 				handleGameEnd(split);
+				break;
 			default:
 				System.out.println("An invalid command came in: " + command);
 				sendMessage(Protocol.ERROR + " " + "010");
@@ -228,7 +229,8 @@ public class Client  {
 		int y = Integer.parseInt(command[4]);
 		x++;
 		y++;
-		Mark m = new Mark(currentPlayer.getMark().getChar(), new Position(x, y, game.getBoard().getHighestZfromXY(x, y)));
+		Mark m = new Mark(currentPlayer.getMark().getChar(), 
+				new Position(x, y, game.getBoard().getHighestZfromXY(x, y)));
 		game.getBoard().setMark(m);
 		myTUI.updateGameState(game.getBoard());
 		if (!(command.length < 6) && command[5].equals(clientName)) {
@@ -288,7 +290,8 @@ public class Client  {
 		if (command[1].equals("120")) {
 			myTUI.updateGameState(game.getBoard());
 			Mark m;
-			System.out.println("Your last move was not accepted by the server, please try a new move.");
+			System.out.println("Your last move was not accepted by the server,"
+					+ " please try a new move.");
 			m = game.getPlayers().get(myNumerInGame).determineMove(game.getBoard());
 			int localx = m.getPosition().getX();
 			int localy = m.getPosition().getY();
@@ -340,7 +343,7 @@ public class Client  {
 	}
 
 	public void players(String[] command) {
-		if((command.length > 1) && command[1].equals("chat")) {
+		if ((command.length > 1) && command[1].equals("chat")) {
 			sendMessage(Protocol.PLAYERS + " " + "ALL");
 		} else {
 			sendMessage(Protocol.PLAYERS + " " + 1);

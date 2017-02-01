@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
-import java.util.Arrays;
 import java.util.Objects;
 
 public class ClientHandler extends Thread {
@@ -83,8 +82,8 @@ public class ClientHandler extends Thread {
 		}
 
 		String command = split[0];
-		if (Objects.equals(split[0], "GAME") || Objects.equals(split[0], "CHALLENGE") || Objects.equals(split[0], "CHAT")
-				|| Objects.equals(split[0], "LEADERBOARD")) {
+		if (Objects.equals(split[0], "GAME") || Objects.equals(split[0], "CHALLENGE") 
+				|| Objects.equals(split[0], "CHAT") || Objects.equals(split[0], "LEADERBOARD")) {
 			if (split.length > 1) {
 				command = command + " " + split[1];
 			}
@@ -143,8 +142,12 @@ public class ClientHandler extends Thread {
 				server.addPlayer(command[1]);
 				this.name = command[1];
 				sendMessage(Protocol.CONFIRM + " " + server.getMYEXTS());
-			} else sendMessage(Protocol.ERROR + " 190");
-		} else sendMessage(Protocol.ERROR + " 011");
+			} else {
+				sendMessage(Protocol.ERROR + " 190");
+			}
+		} else {
+			sendMessage(Protocol.ERROR + " 011");
+		}
 	}
 
 	private void handleDisconnect(String[] command) {
@@ -154,13 +157,17 @@ public class ClientHandler extends Thread {
 	private void handleGameReady(String[] command) {
 		if (command.length > 1) {
 			server.updateReady(name, true);
-		} else sendMessage(Protocol.ERROR + " 011");
+		} else {
+			sendMessage(Protocol.ERROR + " 011");
+		}
 	}
 
 	private void handleGameUnready(String[] command) {
 		if (command.length > 1) {
 			server.updateReady(name, false);
-		} else sendMessage(Protocol.ERROR + " 011");
+		} else {
+			sendMessage(Protocol.ERROR + " 011");
+		}
 	}
 
 	private void handleGameMove(String[] command) {

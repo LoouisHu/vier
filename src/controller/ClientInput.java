@@ -31,12 +31,15 @@ public class ClientInput extends Thread {
                 } else if (msg.equals("players")) {
                     client.players(split);
                 } else {
-                    System.out.println("USAGE: Besides entering an x or y when asked, you can do the following:");
-                    System.out.println("Private chat to a user using 'chat private [username] [message]'");
+                    System.out.println("USAGE: Besides entering an x or y when asked,"
+                    		+ " you can do the following:");
+                    System.out.println("Private chat to a user using "
+                    		+ "'chat private [username] [message]'");
                     System.out.println("Chat to all users using 'chat global [message]");
                     System.out.println("Chat to your current game using 'chat game [message]'");
                     System.out.println("Request a list of connected players using 'players all'");
-                    System.out.println("Request a list of connected players that support chat using 'players chat'");
+                    System.out.println("Request a list of connected players "
+                    		+ "that support chat using 'players chat'");
                     System.out.println("Exit the client using 'exit'");
                 }
             }

@@ -20,38 +20,19 @@ public class Position {
     	this.y = y;
     }
 
+    //@pure
     public int getX() {
         return x;
     }
 
+    //@pure
     public int getY() {
         return y;
     }
 
+    //@pure
     public int getZ() {
         return z;
     }
-
-    public void setXYZ(int newX, int newY, int newZ) {
-        this.x = newX;
-        this.y = newY;
-        this.z = newZ;
-    }
     
-    @Override
-    public int hashCode() {
-    	return Objects.hash(x, y, z);
-    }
-    
-    @Override
-    public boolean equals(Object o) {
-    	if (o == this) {
-    		return true;
-    	}
-    	if (o == null || !(o instanceof Position)) {
-    		return false;
-    	}
-    	Position p = Position.class.cast(o);
-    	return x.equals(p.x) && y.equals(p.y) && z.equals(p.z);
-    }
 }
