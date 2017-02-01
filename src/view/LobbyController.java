@@ -107,6 +107,7 @@ public class LobbyController implements Initializable {
 			@Override
 			public void handle(WindowEvent event) {
 				//TODO Send DISCONNECT to server
+				event.consume();
 				Platform.exit();
 			}
 		});
@@ -175,6 +176,10 @@ public class LobbyController implements Initializable {
 	
 	void setUsernameLabel(String user) {
 		usernameText.setText(user);	
+	}
+	
+	public void sendSystemMessage(String msg) {
+		chatView.getItems().add(new HBox(new Label("[SYSTEM] " + msg)));
 	}
 	
 	@Override

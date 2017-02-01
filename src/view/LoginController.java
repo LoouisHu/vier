@@ -65,6 +65,7 @@ public class LoginController implements Initializable {
 				@Override
 				public void handle(WindowEvent event) {
 					//TODO Send DISCONNECT to server
+					event.consume();
 					Platform.exit();
 				}
 			});

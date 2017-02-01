@@ -16,8 +16,6 @@ public class Board {
     private Set<Position> availablePositions;
     private int zAxis;
     private int boardLength;
-    private int aiThinkTime;
-    private int aiTimeLeft;
     
     //Testing purposes
     //@requires boardLength >4 && boardLength <= 9;
@@ -27,10 +25,6 @@ public class Board {
         availablePositions = new HashSet<Position>();
         placeAvailablePositions();
         zAxis = 1;
-    }
-    
-    public int getAIThinkTime() {
-    	return aiThinkTime;
     }
 
     //@pure
@@ -51,7 +45,6 @@ public class Board {
     //@requires mark.getPosition().getX() != 0;
     //@requires mark.getPosition().getY() != 0;
     //@requires mark.getPosition().getZ() != 0;
-    //@ensures getAvailablePositions();
     public void setMark(Mark mark) {
         int x = mark.getPosition().getX();
         int y = mark.getPosition().getY();
@@ -148,11 +141,11 @@ public class Board {
     }
     
     /*@
-     * 	requires m.getChar != null;
+      	requires m.getChar != null;
        	requires getPlayedMarks().keySet().contains(m.getPosition());
     	ensures (\forall int i; 0 < playedMarks.size();
     			(Mark) playedMarks.values().toArray()[i] != null;
-    				(\exists playedMarks.values().toArray()[i].getChar() == m.getChar();
+    				;(\exists playedMarks.values().toArray()[i].getChar() == m.getChar();
     					(\exists playedMarks.get(new Position(p.getX() + 1, p.getY(), p.getZ())).getChar() == markie.getChar()
     					&& playedMarks.get(new Position(p.get + 2, y, z)).getChar() == markie.getChar()
     					&& playedMarks.get(new Position(x + 3, y, z)).getChar() == markie.getChar());
